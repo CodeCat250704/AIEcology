@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登录 · AI项目生态</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="login-wrapper">
+        <div class="login-card">
+            <div class="login-header">
+                <div class="logo">
+                    <span class="logo-icon"><i class="fa-solid fa-cube"></i></span>
+                    <span class="logo-text">AI项目生态</span>
+                </div>
+                <h2>欢迎回来</h2>
+                <p class="sub-text">登录您的账号以访问社区</p>
+            </div>
+
+            <!-- 登录表单 -->
+            <form class="login-form" action="/api/auth/login" method="POST">
+                <div class="form-group">
+                    <label for="username">账号 / 邮箱</label>
+                    <input type="text" id="username" name="username" placeholder="请输入您的用户名" required autocomplete="username">
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">密码</label>
+                    <input type="password" id="password" name="password" placeholder="请输入您的密码" required autocomplete="current-password">
+                </div>
+
+                <!-- 图片验证码区域 -->
+                <div class="form-group captcha-group">
+                    <label for="captcha">图形验证码</label>
+                    <div class="captcha-container">
+                        <input type="text" id="captcha" name="captcha" placeholder="输入验证码" required autocomplete="off">
+                        <img src="/api/auth/captcha" alt="验证码" class="captcha-image" id="captchaImage" title="点击刷新">
+                    </div>
+                </div>
+
+                <div class="form-options">
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="remember_me"> 记住我
+                    </label>
+                    <a href="/gitin/forgot-password" class="forgot-link">忘记密码?</a>
+                </div>
+
+                <button type="submit" class="btn-login-submit">登 录</button>
+            </form>
+
+            <!-- 第三方登录引导 (GitHub OAuth) -->
+            <div class="social-login">
+                <p class="or-divider">或使用以下方式登录</p>
+                <div class="social-buttons">
+                    <!-- 跳转去后端，由后端触发 GitHub OAuth 流程 -->
+                    <a href="/api/auth/github" class="social-btn github">
+                        <i class="fa-brands fa-github"></i> GitHub 关联登录
+                    </a>
+                </div>
+            </div>
+
+            <div class="login-footer">
+                还没有账号？ <a href="/gitin/register">立即注册</a>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

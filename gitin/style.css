@@ -1,0 +1,71 @@
+:root {
+    --primary-purple: #4a2c6d;
+    --light-purple: #7b5f9e;
+    --text-main: #333333;
+    --text-gray: #666666;
+    --border-light: #e8e0f0;
+    --bg-white: #ffffff;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --shadow-card: 0 8px 24px rgba(74, 44, 109, 0.10);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { 
+    font-family: -apple-system, system-ui, sans-serif; 
+    background: #f8f6fa; 
+    display: flex; align-items: center; justify-content: center; min-height: 100vh;
+}
+.login-wrapper { width: 100%; padding: 20px; display: flex; justify-content: center; }
+.login-card {
+    background: var(--bg-white); width: 100%; max-width: 420px;
+    padding: 40px; border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-card); border: 1px solid var(--border-light);
+}
+.login-header { text-align: center; margin-bottom: 30px; }
+.logo { margin-bottom: 15px; display: flex; align-items: center; justify-content: center; gap: 8px; color: var(--primary-purple); font-weight: bold; font-size: 1.2rem; }
+.login-header h2 { font-size: 1.5rem; font-weight: 600; margin-bottom: 6px; }
+.sub-text { color: var(--text-gray); font-size: 0.9rem; }
+
+/* 表单 */
+.login-form { display: flex; flex-direction: column; gap: 20px; }
+.form-group { display: flex; flex-direction: column; gap: 6px; }
+.form-group label { font-size: 0.9rem; font-weight: 500; }
+.form-group input {
+    padding: 12px 14px; border: 1px solid var(--border-light); border-radius: var(--radius-md);
+    font-size: 0.95rem; outline: none; transition: border-color 0.2s; background: #fcfcfc;
+}
+.form-group input:focus { border-color: var(--primary-purple); }
+
+/* 验证码容器 */
+.captcha-container { display: flex; gap: 10px; }
+.captcha-container input { flex: 1; }
+.captcha-image {
+    height: 46px; border-radius: var(--radius-md);
+    border: 1px solid var(--border-light); cursor: pointer;
+    background: #eee; width: 120px; object-fit: cover;
+}
+
+.form-options { display: flex; justify-content: space-between; font-size: 0.85rem; margin-top: -5px; }
+.checkbox-label { display: flex; align-items: center; gap: 6px; color: var(--text-gray); cursor: pointer; }
+.forgot-link { color: var(--light-purple); text-decoration: none; }
+.btn-login-submit {
+    width: 100%; padding: 14px; border: none; background: var(--primary-purple);
+    color: #ffffff; font-size: 1rem; font-weight: 600; border-radius: var(--radius-md);
+    cursor: pointer; transition: background 0.2s;
+}
+.btn-login-submit:hover { background: #3d235e; }
+
+/* 社交登录 */
+.social-login { margin-top: 25px; }
+.or-divider { text-align: center; color: var(--text-gray); font-size: 0.8rem; position: relative; margin-bottom: 15px; }
+.or-divider::before, .or-divider::after { content: ""; position: absolute; top: 50%; width: 30%; height: 1px; background: var(--border-light); }
+.or-divider::before { left: 0; } .or-divider::after { right: 0; }
+.social-btn {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    padding: 10px; border: 1px solid var(--border-light); border-radius: var(--radius-md);
+    text-decoration: none; color: var(--text-main); transition: all 0.2s; background: #fbfbfb;
+}
+.social-btn.github:hover { background: #24292e; color: #fff; border-color: #24292e; }
+.login-footer { text-align: center; margin-top: 25px; font-size: 0.9rem; color: var(--text-gray); }
+.login-footer a { color: var(--primary-purple); text-decoration: none; font-weight: 500; }

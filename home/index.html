@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI项目生态 - 首页</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div id="app">
+        <!-- 顶部导航 -->
+        <header class="navbar">
+            <div class="nav-left">
+                <div class="logo"><span class="logo-text">AI项目生态</span></div>
+                <nav class="menu">
+                    <a href="/home/index.html" class="active">首页</a>
+                    <a href="#">作品库</a>
+                    <a href="#">项目中心</a>
+                    <a href="#">资源中心</a>
+                    <a href="#">支持</a>
+                </nav>
+            </div>
+            <div class="nav-right">
+                <a href="/gitin/index.html" class="btn-login">登录</a>
+            </div>
+        </header>
+
+        <main class="main-content">
+            
+            <!-- 1. 轮播图/Banner区 -->
+            <section class="banner-section" id="bannerContainer">
+                <div class="banner-text">
+                    <h2>加载轮播图中...</h2>
+                </div>
+                <div class="banner-icon"><i class="fa-solid fa-laptop-code"></i></div>
+            </section>
+
+            <!-- 2. 每日最新消息 (时间轴) -->
+            <section class="timeline-section">
+                <h2 class="section-title">每日最新消息、创作</h2>
+                <div class="timeline-container" id="timelineContainer">
+                    <!-- 数据通过 JS 动态渲染 -->
+                </div>
+            </section>
+
+            <!-- 3. 快捷入口区 -->
+            <section class="quick-links" id="quickLinks">
+                <!-- 数据通过 JS 动态渲染 -->
+            </section>
+
+            <!-- 4. 核心双栏 -->
+            <div class="dashboard-grid">
+                <!-- 左侧：论坛流 -->
+                <div class="column left-column">
+                    <div class="tabs-container">
+                        <button class="tab-btn active">论坛</button>
+                        <button class="tab-btn">所有主题</button>
+                        <button class="tab-btn">所有板面</button>
+                    </div>
+                    <div class="forum-stream" id="forumStream">
+                        <!-- 论坛帖子列表将渲染在这里 -->
+                    </div>
+                </div>
+
+                <!-- 右侧：热门项目 -->
+                <div class="column right-column">
+                    <div class="card-header">
+                        <h3>热门项目</h3>
+                        <a href="#" class="more-link">→ 详细</a>
+                    </div>
+                    <div class="hot-projects" id="hotProjects">
+                        <!-- 热门项目列表将渲染在这里 -->
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

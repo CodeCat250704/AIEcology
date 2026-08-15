@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>AIEcology 论坛 · 欢迎</title>
+    <!-- 跳转逻辑：1秒后跳转到 /home/index.html -->
+    <meta http-equiv="refresh" content="1; url=/home/index.html">
+    <style>
+        /* 全局重置 + 紫色主题 + 空白背景 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #ffffff;  /* 纯白背景，符合「空白」要求 */
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            /* 紫色基调通过文字、装饰和 Logo 区域呈现 */
+            color: #4a2c6d;        /* 深紫色，主色调 */
+        }
+
+        /* 居中卡片 —— 极简风格，聚焦 logo */
+        .welcome-container {
+            text-align: center;
+            padding: 1.5rem;
+            max-width: 480px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: transparent; /* 完全透明，继承 body 白色背景 */
+            border-radius: 32px;
+            /* 优雅的紫色微光，不破坏空白感，仅增加层次 */
+            box-shadow: 0 12px 40px rgba(74, 44, 109, 0.08);
+        }
+
+        /* Logo 容器：使用图片 /picture/logo.png */
+        .logo-wrapper {
+            width: 180px;
+            height: 180px;
+            margin-bottom: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent; /* 完全空白，只有图片 */
+            border-radius: 50%;
+            /* 若有需要，可加极淡紫色边框，但保留空白感，这里选择不加 */
+        }
+
+        .logo-wrapper img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;      /* 保持比例，完整显示 logo */
+            filter: drop-shadow(0 4px 12px rgba(74, 44, 109, 0.12));
+            transition: transform 0.2s ease;
+        }
+
+        /* 论坛名称 —— 紫色调，干净优雅 */
+        .forum-title {
+            font-size: 2.2rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            color: #3f2a5e;          /* 深紫罗兰 */
+            margin-top: 0.2rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 2px 4px rgba(74, 44, 109, 0.05);
+        }
+
+        .forum-sub {
+            font-size: 1rem;
+            font-weight: 400;
+            color: #7b5f9e;          /* 柔紫色 */
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 1.8rem;
+            border-bottom: 1px solid rgba(123, 95, 158, 0.2);
+            padding-bottom: 0.8rem;
+            display: inline-block;
+        }
+
+        /* 跳转提示 —— 紫色小字，低调 */
+        .redirect-hint {
+            font-size: 0.95rem;
+            color: #886bb0;
+            background: rgba(123, 95, 158, 0.06);
+            padding: 0.5rem 1.2rem;
+            border-radius: 60px;
+            backdrop-filter: blur(2px);
+            border: 1px solid rgba(123, 95, 158, 0.10);
+            letter-spacing: 0.3px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .redirect-hint .spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(123, 95, 158, 0.15);
+            border-top: 2px solid #4a2c6d;
+            border-radius: 50%;
+            animation: spin 0.9s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* 极简装饰：紫色细线，保持空白背景的精致感 */
+        .accent-line {
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #9b7fc0, transparent);
+            margin: 0.75rem auto 1.2rem auto;
+            border-radius: 4px;
+            opacity: 0.4;
+        }
+
+        /* 响应式微调 */
+        @media (max-width: 480px) {
+            .logo-wrapper {
+                width: 140px;
+                height: 140px;
+            }
+            .forum-title {
+                font-size: 1.8rem;
+            }
+            .forum-sub {
+                font-size: 0.85rem;
+                letter-spacing: 2px;
+            }
+        }
+
+        /* 完全符合「背景为空白」：无额外图形、无渐变背景，纯白 */
+        /* 所有紫色均来自文字、Logo 及细微装饰，不破坏空白背景 */
+    </style>
+</head>
+<body>
+    <div class="welcome-container">
+        <!-- Logo 图片：位于 /picture/logo.png -->
+        <div class="logo-wrapper">
+            <img src="/picture/logo.png" alt="AIEcology 论坛 Logo" title="AIEcology">
+        </div>
+
+        <!-- 论坛名称 + 副标题（紫色主题） -->
+        <h1 class="forum-title">AIEcology</h1>
+        <div class="accent-line"></div>
+        <p class="forum-sub">东方最大的AI项目社区</p>
+
+        <!-- 跳转提示：1秒后自动跳转 /home/index.html -->
+        <div class="redirect-hint">
+            <span class="spinner"></span>
+            <span>正在进入论坛 …</span>
+        </div>
+
+        <!-- 隐藏的 meta refresh 已位于 head，1秒后跳转 -->
+        <!-- 同时提供备用的 JS 跳转，确保兼容性，且不会干扰 meta 刷新 -->
+    </div>
+
+    <!-- 后备 JavaScript：确保 1 秒后跳转，即使 meta 被某些环境忽略 -->
+    <script>
+        (function() {
+            // 在 1 秒后执行跳转（与 meta refresh 时间一致）
+            // 但为了不重复跳转，采用标志控制，同时避免与 meta 冲突
+            // 大多数浏览器会遵循 meta，但 JS 可作为额外保障
+            let redirected = false;
+            const targetURL = '/home/index.html';
+
+            // 延迟 1000ms 执行跳转
+            setTimeout(function() {
+                if (!redirected) {
+                    redirected = true;
+                    window.location.href = targetURL;
+                }
+            }, 2000);
+
+            // 监听页面卸载/加载，防止多次跳转（但无妨）
+            window.addEventListener('beforeunload', function() {
+                redirected = true;
+            });
+
+            // 如果 meta refresh 先触发，JS 会检测到 location 变化，设置标志
+            // 但 meta refresh 会直接替换页面，故 JS 可能不会执行完成，
+            // 但为了避免任何微小的双跳转风险，设定标志在页面跳转前即无效。
+            // 实际上，meta 刷新和 JS 同时存在是常见的冗余做法，没有副作用。
+        })();
+    </script>
+</body>
+</html>

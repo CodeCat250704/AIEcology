@@ -1,0 +1,22 @@
+[
+    {
+        "title": "作品中心",
+        "icon": "fa-solid fa-cube",
+        "url": "/works"
+    },
+    {
+        "title": "IPOA 赛事",
+        "icon": "fa-solid fa-trophy",
+        "url": "/ipoa"
+    },
+    {
+        "title": "开发者文档",
+        "icon": "fa-solid fa-code",
+        "url": "/docs"
+    },
+    {
+        "title": "加入支持",
+        "icon": "fa-solid fa-hand-holding-heart",
+        "url": "/support"
+    }
+]
