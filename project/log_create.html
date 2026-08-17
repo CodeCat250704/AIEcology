@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>发布开发日志</title>
+    <link rel="stylesheet" href="/home/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body { background: #fcfcfe; padding: 40px; display: flex; justify-content: center; }
+        .log-card { max-width: 700px; width:100%; background: #fff; border: 1px solid #e8e0f0; border-radius: 12px; padding: 30px; box-shadow: 0 4px 16px rgba(74, 44, 109, 0.08); }
+        .log-card h2 { color: #4a2c6d; margin-bottom: 20px; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; font-weight: 600; margin-bottom: 6px; }
+        .form-group input[type="text"], .form-group textarea { width: 100%; padding: 12px; border: 1px solid #e8e0f0; border-radius: 8px; outline: none; background: #faf9fc; }
+        .form-group textarea { min-height: 120px; resize: vertical; }
+        .file-upload { border: 2px dashed #e8e0f0; border-radius: 8px; padding: 20px; text-align: center; cursor: pointer; background: #faf9fc; }
+        .file-upload:hover { border-color: #4a2c6d; }
+        .btn-submit { width: 100%; padding: 14px; background: #4a2c6d; color: #fff; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.2s; }
+        .btn-submit:hover { background: #3d235e; }
+    </style>
+</head>
+<body>
+    <div class="log-card">
+        <h2><i class="fa-solid fa-code"></i> 发布开发日志</h2>
+        <p style="color:#888;margin-bottom:20px;">本日志将向公众展示，请确保内容积极向上。</p>
+        <form id="createLogForm" enctype="multipart/form-data">
+            <input type="hidden" name="project_id" id="projectIdInput">
+            <div class="form-group">
+                <label>日志标题</label>
+                <input type="text" name="title" required placeholder="例如：完成前端首页重构">
+            </div>
+            <div class="form-group">
+                <label>文字说明</label>
+                <textarea name="content" required placeholder="介绍您今天完成了哪些工作..."></textarea>
+            </div>
+            <div class="form-group">
+                <label>代码片段 (Markdown/纯文本可选)</label>
+                <textarea name="code_snippet" placeholder="npm install react..." style="min-height:60px; font-family: monospace;"></textarea>
+            </div>
+            <div class="form-group">
+                <label>上传成果图片 (可多选)</label>
+                <div class="file-upload">
+                    <label for="log_images" style="cursor:pointer;display:block;">
+                        <i class="fa-regular fa-image" style="font-size:2rem;color:#4a2c6d;"></i><br>
+                        <span style="color:#888;">点击选择图片</span>
+                    </label>
+                    <input type="file" id="log_images" name="log_images" accept="image/*" multiple style="display:none;">
+                </div>
+            </div>
+            <button type="submit" class="btn-submit">发布日志</button>
+        </form>
+    </div>
+    <script>
+        // 从 URL 获取项目 ID 并注入到表单
+        const params = new URLSearchParams(window.location.search);
+        document.getElementById('projectIdInput').value = params.get('id');
+
+        document.getElementById('createLogForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = e.target.querySelector('button');
+            btn.innerText = "发布中..."; btn.disabled = true;
+            try {
+                const res = await fetch('/api/project/log/create', { method: 'POST', body: new FormData(e.target) });
+                const result = await res.json();
+                if (result.success) { alert('日志发布成功！'); window.history.back(); } 
+                else { alert('发布失败: ' + result.message); }
+            } catch(err) { alert('网络错误'); }
+            finally { btn.innerText = "发布日志"; btn.disabled = false; }
+        });
+    </script>
+</body>
+</html>

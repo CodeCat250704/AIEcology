@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>资源详情</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <header class="navbar">
+        <div class="nav-left">
+            <div class="logo">AI项目生态</div>
+            <nav class="menu">
+                <a href="/home/index.html">首页</a>
+                <a href="/works/index.html">作品库</a>
+                <a href="/project/index.html">项目中心</a>
+                <a href="/resource/index.html" class="active">资源中心</a>
+                <a href="/legal/index.html">支持</a>
+            </nav>
+        </div>
+        <div class="user-dropdown" id="userDropdown" style="display:none; align-items:center; gap:12px; cursor:pointer;">
+    <a href="/user/index.html" id="userNameLink" style="text-decoration:none; color:var(--primary-purple);">
+        <span style="font-weight:500;" id="userNameDisplay">用户</span>
+    </a>
+    <a href="#" id="logoutBtn" style="font-size:0.85rem; color:#888; text-decoration:none; transition:0.2s; margin-left:5px;">退出</a>
+</div>
+    </header>
+
+    <div class="resource-wrapper">
+        <div id="detailContainer" class="detail-container">
+            <div style="text-align:center;padding:40px;color:var(--text-gray);">
+                <i class="fa-solid fa-spinner fa-spin" style="font-size:2rem;"></i><br>加载详情中...
+            </div>
+        </div>
+    </div>
+    <script src="/home/script.js"></script>
+    <script src="detail.js"></script>
+</body>
+</html>

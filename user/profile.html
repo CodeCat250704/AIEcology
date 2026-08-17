@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>修改资料</title>
+    <link rel="stylesheet" href="../home/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body { background: #fcfcfe; padding: 40px; display: flex; justify-content: center; }
+        .card { max-width: 600px; width: 100%; background: #fff; border: 1px solid #e8e0f0; border-radius: 12px; padding: 40px; }
+        .card h2 { color: #4a2c6d; margin-bottom: 20px; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; font-weight: 600; margin-bottom: 6px; }
+        .form-group input, .form-group textarea { width: 100%; padding: 12px; border: 1px solid #e8e0f0; border-radius: 8px; outline: none; }
+        .form-group input:focus { border-color: #4a2c6d; }
+        .btn-save { width: 100%; padding: 14px; background: #4a2c6d; color: #fff; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; }
+        .btn-save:hover { background: #3d235e; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2><i class="fa-regular fa-user-pen"></i> 修改个人资料</h2>
+        <form id="profileForm">
+            <div class="form-group">
+                <label>昵称</label>
+                <input type="text" id="nickname" name="nickname" placeholder="输入您想展示的名字">
+            </div>
+            <div class="form-group">
+                <label>个人简介</label>
+                <textarea name="bio" rows="3" placeholder="写一句介绍您自己的话..."></textarea>
+            </div>
+            <button type="submit" class="btn-save">保存修改</button>
+        </form>
+        <a href="/user/index.html" style="display:block;margin-top:15px;text-align:center;color:#888;text-decoration:none;">返回个人中心</a>
+    </div>
+    <script>
+        document.getElementById('profileForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const data = Object.fromEntries(new FormData(e.target).entries());
+            const res = await fetch('/api/user/profile/update', {
+                method: 'POST', headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(data)
+            });
+            const result = await res.json();
+            if(result.success) { alert("资料保存成功！"); window.location.href='/user/index.html'; }
+            else { alert("失败: " + result.message); }
+        });
+    </script>
+</body>
+</html>

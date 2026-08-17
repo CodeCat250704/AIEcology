@@ -95,8 +95,13 @@ body { font-family: system-ui, -apple-system, sans-serif; background: var(--bg-w
     background: var(--primary-purple); color: #fff; 
     transform: translateY(-2px); box-shadow: 0 4px 12px rgba(74, 44, 109, 0.15);
 }
-.link-card i { display: block; font-size: 1.5rem; margin-bottom: 5px; }
-
+.link-card img {
+    display: block;
+    width: 48px;     /* 图片宽 48px   96*96高清*/
+    height: 48px;    /* 图片高 48px */
+    object-fit: contain; /* 保证图片按比例缩放在方框内，不会变形 */
+    margin: 0 auto 8px auto; /* 上下居中，下边距8px */
+}
 /* ================= 4. 核心双栏布局 (左侧2/3, 右侧1/3) ================= */
 .dashboard-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 30px; }
 
@@ -122,8 +127,9 @@ body { font-family: system-ui, -apple-system, sans-serif; background: var(--bg-w
 }
 .list-item:hover { background: var(--bg-light-purple); border-color: var(--light-purple); }
 .list-item h4 { font-size: 1rem; font-weight: 500; margin-bottom: 6px; }
-.list-item .meta { font-size: 0.8rem; color: var(--text-gray); }
-.list-item .stats { font-size: 0.9rem; color: var(--primary-purple); font-weight: 500; }
+.list-item .meta { font-size: 0.85rem; color: var(--text-gray); display: flex; align-items: center; gap: 5px; }
+.list-item .meta i { font-size: 0.85rem; }
+.list-item .stats { font-size: 0.9rem; color: var(--primary-purple); font-weight: 500; display: flex; align-items: center; gap: 5px; }
 
 /* ================= 响应式调整 ================= */
 @media (max-width: 768px) {

@@ -1,0 +1,6 @@
+{
+  "id": "opensource",
+  "title": "开源授权协议",
+  "icon": "fa-regular fa-code-branch",
+  "content": "平台上的部分项目和资源遵循开源协议。\n\n1. 作品库内的开源代码默认遵循 MIT 协议。\n2. 资源中心内的模型和数据集可能附带不同的 CC 授权。\n3. 使用时请务必留意作品自带的 LICENSE 文件。"
+}

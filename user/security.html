@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>账号安全</title>
+    <link rel="stylesheet" href="../home/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body { background: #fcfcfe; padding: 40px; display: flex; justify-content: center; }
+        .card { max-width: 600px; width: 100%; background: #fff; border: 1px solid #e8e0f0; border-radius: 12px; padding: 40px; }
+        .card h2 { color: #4a2c6d; margin-bottom: 20px; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; font-weight: 600; margin-bottom: 6px; }
+        .form-group input { width: 100%; padding: 12px; border: 1px solid #e8e0f0; border-radius: 8px; outline: none; }
+        .btn-save { width: 100%; padding: 14px; background: #4a2c6d; color: #fff; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; }
+        .btn-save:hover { background: #3d235e; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2><i class="fa-solid fa-shield-halved"></i> 账号安全</h2>
+        <form id="securityForm">
+            <div class="form-group"><label>原密码</label><input type="password" name="old_password" placeholder="输入当前密码" required></div>
+            <div class="form-group"><label>新密码</label><input type="password" name="new_password" placeholder="输入新密码 (至少6位)" required></div>
+            <div class="form-group"><label>确认新密码</label><input type="password" name="confirm_password" placeholder="再次输入新密码" required></div>
+            <button type="submit" class="btn-save">修改密码</button>
+        </form>
+        <a href="/user/index.html" style="display:block;margin-top:15px;text-align:center;color:#888;text-decoration:none;">返回个人中心</a>
+    </div>
+    <script>
+        document.getElementById('securityForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const data = Object.fromEntries(new FormData(e.target).entries());
+            if(data.new_password !== data.confirm_password) { alert("两次新密码不一致"); return; }
+            const res = await fetch('/api/user/password/update', {
+                method: 'POST', headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ old_password: data.old_password, new_password: data.new_password })
+            });
+            const result = await res.json();
+            if(result.success) { alert("密码修改成功！请重新登录"); window.location.href='/gitin/index.html'; }
+            else { alert("失败: " + result.message); }
+        });
+    </script>
+</body>
+</html>

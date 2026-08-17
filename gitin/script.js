@@ -1,4 +1,13 @@
 document.addEventListener('DOMContentLoaded', () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const regUsername = urlParams.get('username');
+    if (regUsername) {
+        const usernameInput = document.getElementById('loginUsername');
+        if (usernameInput) {
+            usernameInput.value = regUsername;
+        }
+    }
+    
     // 1. 验证码点击刷新逻辑
     const captchaImg = document.getElementById('captchaImage');
     if (captchaImg) {

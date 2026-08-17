@@ -1,22 +1,9 @@
 [
     {
         "title": "测试1",
-        "icon": "fa-solid fa-cube",
-        "url": "/works"
-    },
-    {
-        "title": "测试2",
-        "icon": "fa-solid fa-trophy",
-        "url": "/ipoa"
-    },
-    {
-        "title": "测试3",
-        "icon": "fa-solid fa-code",
-        "url": "/docs"
-    },
-    {
-        "title": "测试4",
-        "icon": "fa-solid fa-hand-holding-heart",
-        "url": "/support"
+        "img_src": "/picture/test.png",  
+        "img_alt": "作品库图标",          
+        "url": "/works/index.html"
     }
+
 ]

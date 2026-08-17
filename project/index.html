@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>项目中心 - AI项目生态</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <header class="navbar">
+        <div class="nav-left">
+            <div class="logo">AI项目生态</div>
+            <nav class="menu">
+                <nav class="menu">
+                    <a href="/home/index.html">首页</a>
+                <a href="/works/index.html">作品库</a>
+                <a href="/project/index.html">项目中心</a>
+                <a href="/resource/index.html" class="active">资源中心</a>
+                <a href="/legal/index.html">支持</a>
+                </nav>
+            </nav>
+        </div>
+
+        <div class="user-dropdown" id="userDropdown" style="display:none; align-items:center; gap:12px; cursor:pointer;">
+    <a href="/user/index.html" id="userNameLink" style="text-decoration:none; color:var(--primary-purple);">
+        <span style="font-weight:500;" id="userNameDisplay">用户</span>
+    </a>
+    <a href="#" id="logoutBtn" style="font-size:0.85rem; color:#888; text-decoration:none; transition:0.2s; margin-left:5px;">退出</a>
+</div>
+
+        <!--<div class="nav-right">
+            <a href="/gitin/index.html" class="btn-login" id="loginBtn">登录</a>
+        </div>-->
+    </header>
+
+    <div class="project-wrapper">
+        <div class="page-header">
+            <h2>项目中心</h2>
+            <a href="/project/create.html" class="btn-create"><i class="fa-solid fa-plus"></i> 发布新动态</a>
+        </div>
+
+        <div class="tab-filter">
+            <button class="tab-btn active" data-type="all">全部</button>
+            <button class="tab-btn" data-type="recruit"><i class="fa-solid fa-users"></i> 招募/组队</button>
+            <button class="tab-btn" data-type="report"><i class="fa-regular fa-newspaper"></i> 项目周报</button>
+            <button class="tab-btn" data-type="collab"><i class="fa-solid fa-handshake"></i> 协作/资源</button>
+        </div>
+
+        <div class="project-grid">
+            <!-- 左侧：列表 -->
+            <div class="list-col" id="projectList">
+                <!-- 由 JS 动态渲染 -->
+                <div class="empty-state"><i class="fa-regular fa-folder-open"></i><p>暂无项目动态，快来发布第一个吧！</p></div>
+            </div>
+            
+            <!-- 右侧：统计与热门 (数据接口预留) -->
+            <div class="side-col">
+                <div class="sidebar-card">
+                    <h4><i class="fa-solid fa-chart-simple"></i> 平台动态</h4>
+                    <div id="statsBox" style="display:flex; gap:20px; color:var(--text-gray); font-size:0.9rem;">
+                        <span><i class="fa-solid fa-users"></i> 招募: <b id="recruitNum">0</b></span>
+                        <span><i class="fa-regular fa-newspaper"></i> 周报: <b id="reportNum">0</b></span>
+                    </div>
+                </div>
+                <div class="sidebar-card">
+                    <h4><i class="fa-solid fa-fire"></i> 热门推荐</h4>
+                    <div id="hotList" style="font-size:0.9rem; color:#777;">
+                        <p>数据加载中...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/home/script.js"></script> <!-- 复用登录检查 -->
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>资源中心</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <header class="navbar">
+        <div class="nav-left">
+            <div class="logo">AI项目生态</div>
+            <nav class="menu">
+                <a href="/home/index.html">首页</a>
+                <a href="/works/index.html">作品库</a>
+                <a href="/project/index.html">项目中心</a>
+                <a href="/resource/index.html" class="active">资源中心</a>
+                <a href="/legal/index.html">支持</a>
+            </nav>
+        </div>
+        <div class="user-dropdown" id="userDropdown" style="display:none; align-items:center; gap:12px; cursor:pointer;">
+    <a href="/user/index.html" id="userNameLink" style="text-decoration:none; color:var(--primary-purple);">
+        <span style="font-weight:500;" id="userNameDisplay">用户</span>
+    </a>
+    <a href="#" id="logoutBtn" style="font-size:0.85rem; color:#888; text-decoration:none; transition:0.2s; margin-left:5px;">退出</a>
+</div>
+    </header>
+
+    <div class="resource-wrapper">
+        <div class="page-header">
+            <h1>资源中心</h1>
+            <a href="/resource/create.html" class="btn-upload"><i class="fa-solid fa-cloud-arrow-up"></i> 上传资源</a>
+        </div>
+        <div class="app-grid" id="resourceList">
+            <!-- 由 JS 动态生成卡片 -->
+        </div>
+    </div>
+    <script src="/home/script.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

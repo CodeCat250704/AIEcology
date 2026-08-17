@@ -15,62 +15,60 @@
                 <div class="logo"><span class="logo-text">AI项目生态</span></div>
                 <nav class="menu">
                     <a href="/home/index.html" class="active">首页</a>
-                    <a href="#">作品库</a>
-                    <a href="#">项目中心</a>
-                    <a href="#">资源中心</a>
-                    <a href="#">支持</a>
+                    <a href="/works/index.html">作品库</a>
+                    <a href="/project/index.html">项目中心</a>
+                    <a href="/resource/index.html">资源中心</a>
+                    <a href="/legal/index.html">支持与规范</a>
                 </nav>
             </div>
-            <div class="nav-right">
-                <a href="/gitin/index.html" class="btn-login">登录</a>
-            </div>
+            <div class="user-dropdown" id="userDropdown" style="display:none; align-items:center; gap:12px; cursor:pointer;">
+                    <a href="/user/index.html" id="userNameLink" style="text-decoration:none; color:var(--primary-purple);">
+                        <span style="font-weight:500;" id="userNameDisplay">用户</span>
+                    </a>
+                    <a href="#" id="logoutBtn" style="font-size:0.85rem; color:#888; text-decoration:none; transition:0.2s; margin-left:5px;">退出</a>
+                </div>
         </header>
 
         <main class="main-content">
             
             <!-- 1. 轮播图/Banner区 -->
             <section class="banner-section" id="bannerContainer">
-                <div class="banner-text">
-                    <h2>加载轮播图中...</h2>
-                </div>
-                <div class="banner-icon"><i class="fa-solid fa-laptop-code"></i></div>
+                <!-- JS 渲染 -->
             </section>
 
             <!-- 2. 每日最新消息 (时间轴) -->
             <section class="timeline-section">
                 <h2 class="section-title">每日最新消息、创作</h2>
                 <div class="timeline-container" id="timelineContainer">
-                    <!-- 数据通过 JS 动态渲染 -->
+                    <!-- JS 渲染 -->
                 </div>
             </section>
 
             <!-- 3. 快捷入口区 -->
             <section class="quick-links" id="quickLinks">
-                <!-- 数据通过 JS 动态渲染 -->
+                <!-- JS 渲染 -->
             </section>
 
             <!-- 4. 核心双栏 -->
             <div class="dashboard-grid">
                 <!-- 左侧：论坛流 -->
                 <div class="column left-column">
-                    <div class="tabs-container">
-                        <button class="tab-btn active">论坛</button>
-                        <button class="tab-btn">所有主题</button>
-                        <button class="tab-btn">所有板面</button>
+                    <div class="tabs-container" style="border-bottom: none; margin-bottom: 10px;">
+                        <button class="tab-btn active" style="border-radius: 8px;">🔥 实时热帖</button>
                     </div>
                     <div class="forum-stream" id="forumStream">
-                        <!-- 论坛帖子列表将渲染在这里 -->
+                        <!-- JS 渲染 -->
                     </div>
                 </div>
 
-                <!-- 右侧：热门项目 -->
+                <!-- 右侧：热门项目 (数据源改为 /works) -->
                 <div class="column right-column">
                     <div class="card-header">
                         <h3>热门项目</h3>
-                        <a href="#" class="more-link">→ 详细</a>
+                        <a href="/works/index.html" class="more-link">→ 详细</a>
                     </div>
                     <div class="hot-projects" id="hotProjects">
-                        <!-- 热门项目列表将渲染在这里 -->
+                        <!-- JS 渲染 -->
                     </div>
                 </div>
             </div>

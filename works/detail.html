@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>作品详情</title>
+    <!-- 引用公共的 home 样式 -->
+    <link rel="stylesheet" href="../home/style.css">
+    <!-- 引用作品库独立样式 -->
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <header class="navbar">
+        <div class="nav-left">
+            <div class="logo"><span class="logo-text">AI项目生态</span></div>
+            <nav class="menu">
+                <a href="/home/index.html">首页</a>
+                <a href="/works/index.html" class="active">作品库</a>
+                <a href="/project/index.html">项目中心</a>
+                <a href="/resource/index.html">资源中心</a>
+                <a href="/legal/index.html">支持</a>
+            </nav>
+        </div>
+        <div class="nav-right">
+            <a href="/gitin/index.html" class="btn-login" id="loginBtn">登录</a>
+            <div class="user-dropdown" id="userDropdown" style="display:none; align-items:center; gap:12px;">
+                <span style="color:var(--primary-purple);font-weight:500;" id="userNameDisplay">用户</span>
+                <a href="#" id="logoutBtn" style="font-size:0.85rem; color:#888; text-decoration:none;">退出</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="works-wrapper">
+        <!-- 由 JS 动态生成详情与评论区 -->
+        <div id="detailContainer" style="padding:50px; color:#999; text-align:center;">正在加载作品详情...</div>
+    </div>
+
+    <script src="../home/script.js"></script>
+    <script src="detail.js"></script>
+</body>
+</html>

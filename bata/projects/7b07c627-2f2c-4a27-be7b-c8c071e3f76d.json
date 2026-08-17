@@ -1,0 +1,23 @@
+{
+  "id": "proj_001",
+  "type": "recruit",
+  "title": "AI 桌面助手开发",
+  "content": "我们需要招募一名前端...",
+  "author": "CodeCat250704",
+  "date": "2026-08-17",
+  "status": "审核中",      
+  "members": ["CodeCat250704"], 
+  "applicants": ["UserA"],      
+  "logs": [             
+    {
+      "id": "log_001",
+      "author": "CodeCat250704",
+      "date": "2026-08-18 14:00",
+      "title": "初始化项目脚手架",
+      "content": "今天完成了基础框架的搭建，使用了 React + Tailwind。",
+      "images": ["/bata/uploads/log_img1.png"],
+      "code_snippets": "npm install react-router-dom"
+    }
+  ],
+  "replies": 5
+}

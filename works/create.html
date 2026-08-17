@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>发布新作品</title>
+    <!-- 使用独立的发布页专用 CSS -->
+    <link rel="stylesheet" href="publish.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+    <div class="publish-card">
+        <div class="publish-header">
+            <h2>发布新作品</h2>
+            <p>分享您的创意，让世界看见您的技术。</p>
+        </div>
+
+        <form id="createWorkForm" enctype="multipart/form-data">
+            <div class="publish-body">
+                
+                <!-- 左侧：基础信息填写 -->
+                <div class="left-col">
+                    <div class="form-group">
+                        <label for="title">作品名称</label>
+                        <input type="text" id="title" name="title" required placeholder="例如：AI 绘画桌面助手">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="category">作品分类</label>
+                        <select id="category" name="category">
+                            <option value="AI工具">AI工具</option>
+                            <option value="设计素材">设计素材</option>
+                            <option value="开源项目">开源项目</option>
+                            <option value="其他">其他</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="project_url">项目地址 (GitHub/官网)</label>
+                        <input type="url" id="project_url" name="project_url" placeholder="https://github.com/yourname/project">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="description">作品描述</label>
+                        <textarea id="description" name="description" required placeholder="详细介绍您的作品亮点、功能、使用方法..."></textarea>
+                    </div>
+                </div>
+
+                <!-- 右侧：文件上传区 -->
+                <div class="right-col">
+                    
+                    <div class="form-group">
+                        <label>作品封面 / 效果图</label>
+                        <div class="file-upload-box" id="coverBox">
+                            <label class="file-label" for="cover_img">
+                                <i class="fa-regular fa-image"></i>
+                                <span>点击上传封面图 (支持 JPG/PNG)</span>
+                            </label>
+                            <input type="file" id="cover_img" name="cover_img" accept="image/*">
+                            <div class="file-name" id="coverFileName"></div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>说明文档 (TXT)</label>
+                        <div class="file-upload-box" id="docBox">
+                            <label class="file-label" for="doc_txt">
+                                <i class="fa-regular fa-file-lines"></i>
+                                <span>点击上传文档 (.txt 文件)</span>
+                            </label>
+                            <input type="file" id="doc_txt" name="doc_txt" accept=".txt">
+                            <div class="file-name" id="docFileName"></div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- 底部操作栏 -->
+            <div class="publish-footer">
+                <button type="submit" class="btn-submit-work">立即发布作品</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // 选择文件后，显示文件名提示效果
+        document.getElementById('cover_img').addEventListener('change', function(e) {
+            const fileName = document.getElementById('coverFileName');
+            if(this.files && this.files[0]) {
+                fileName.textContent = '已选择: ' + this.files[0].name;
+                fileName.style.display = 'inline-block';
+                document.getElementById('coverBox').style.borderColor = '#4a2c6d';
+            }
+        });
+
+        document.getElementById('doc_txt').addEventListener('change', function(e) {
+            const fileName = document.getElementById('docFileName');
+            if(this.files && this.files[0]) {
+                fileName.textContent = '已选择: ' + this.files[0].name;
+                fileName.style.display = 'inline-block';
+                document.getElementById('docBox').style.borderColor = '#4a2c6d';
+            }
+        });
+
+        // 提交表单逻辑
+        document.getElementById('createWorkForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const form = e.target;
+            const btn = form.querySelector('.btn-submit-work');
+            const originalText = btn.innerText;
+            
+            btn.innerText = "正在发布...";
+            btn.disabled = true;
+
+            const formData = new FormData(form); // 自动处理文本和文件混合
+
+            try {
+                const res = await fetch('/api/works/create', {
+                    method: 'POST',
+                    body: formData
+                });
+                const result = await res.json();
+                if(result.success) {
+                    alert('🎉 作品发布成功！');
+                    window.location.href = '/works/index.html';
+                } else {
+                    alert('发布失败: ' + result.message);
+                }
+            } catch (err) {
+                alert('网络连接失败，请稍后重试');
+            } finally {
+                btn.innerText = originalText;
+                btn.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>

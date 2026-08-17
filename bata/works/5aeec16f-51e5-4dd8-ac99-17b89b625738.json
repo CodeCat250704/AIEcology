@@ -1,0 +1,21 @@
+{
+    "id": "5aeec16f-51e5-4dd8-ac99-17b89b625738",
+    "title": "测试2",
+    "category": "其他",
+    "description": "123",
+    "project_url": "https://github.com/CodeCat250704/AIEcology",
+    "cover_url": "/bata/uploads/1786938733_2.png",
+    "doc_content": "package main\r\n\r\nimport (\r\n\t\"embed\"\r\n\t\"os\"\r\n\r\n\t\"github.com/wailsapp/wails/v2\"\r\n\t\"github.com/wailsapp/wails/v2/pkg/options\"\r\n\t\"github.com/wailsapp/wails/v2/pkg/options/assetserver\"\r\n)\r\n\r\n//go:embed all:frontend\r\nvar assets embed.FS\r\n\r\nfunc main() {\r\n\t// 创建 App 实例\r\n\tapp := NewApp()\r\n\r\n\t// 启动 Wails 应用\r\n\terr := wails.Run(&options.App{\r\n\t\tTitle:  \"TaskEngine\",\r\n\t\tWidth:  1100, // 窗口宽度\r\n\t\tHeight: 700,  // 窗口高度\r\n\t\t// 【修正：改用 AssetServer 标准配置】\r\n\t\tAssetServer: &assetserver.Options{\r\n\t\t\tAssets: assets, // 把上面定义的 embed 资源传进去\r\n\t\t},\r\n\t\tBackgroundColour: &options.RGBA{R: 245, G: 240, B: 235, A: 1},\r\n\t\tOnStartup:        app.startup,\r\n\t\tBind: []interface{}{\r\n\t\t\tapp, // 把你的 App 结构体绑定给前端\r\n\t\t},\r\n\t})\r\n\r\n\tif err != nil {\r\n\t\tprintln(\"Error:\", err.Error())\r\n\t\tos.Exit(1)\r\n\t}\r\n}\r\n",
+    "author": "CodeCat250704",
+    "date": "2026-08-17 11:52:13",
+    "views": 3,
+    "work_comments": [
+        {
+            "id": "1e812cc4-b6c7-4651-9342-320b24bae3fc",
+            "author": "CodeCat250704",
+            "content": "测试",
+            "date": "2026-08-17 14:15:46"
+        }
+    ],
+    "comments": 1
+}

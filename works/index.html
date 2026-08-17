@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>作品库</title>
+    <link rel="stylesheet" href="../home/style.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <header class="navbar">
+        <div class="nav-left">
+            <div class="logo"><span class="logo-text">AI项目生态</span></div>
+            <nav class="menu">
+                    <a href="/home/index.html">首页</a>
+                <a href="/works/index.html">作品库</a>
+                <a href="/project/index.html">项目中心</a>
+                <a href="/resource/index.html" class="active">资源中心</a>
+                <a href="/legal/index.html">支持</a>
+                </nav>
+        </div>
+        <div class="nav-right">
+            <a href="/gitin/index.html" class="btn-login" id="loginBtn">登录</a>
+            <div class="user-dropdown" id="userDropdown" style="display:none; align-items:center; gap:12px;">
+                <span style="color:var(--primary-purple);font-weight:500;" id="userNameDisplay">用户</span>
+                <a href="#" id="logoutBtn" style="font-size:0.85rem; color:#888; text-decoration:none;">退出</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="works-wrapper">
+        <div class="page-header">
+            <h2>作品库</h2>
+            <a href="/works/create.html" class="btn-create-works"><i class="fa-solid fa-plus"></i> 发布新作品</a>
+        </div>
+        
+        <div class="works-grid" id="worksContainer">
+            <div class="empty-state">
+                <i class="fa-regular fa-images"></i>
+                <h3>还没有作品</h3>
+                <p>成为第一个发布作品的创作者吧！</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="../home/script.js"></script> 
+    <script src="script.js"></script>
+</body>
+</html>

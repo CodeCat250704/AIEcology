@@ -1,0 +1,6 @@
+{
+  "id": "data_policy",
+  "title": "数据存储与同步规则",
+  "icon": "fa-regular fa-database",
+  "content": "本平台采用特殊的文件数据库架构。\n\n1. 用户数据及资源保存在本地的 /bata 文件夹。\n2. 系统每 1 小时会将增量数据自动同步至 GitHub 仓库备份。\n3. 临时缓存 (Supabase) 会在同步完成后自动清理，以节省空间。"
+}

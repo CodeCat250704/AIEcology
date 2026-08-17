@@ -1,0 +1,14 @@
+{
+    "id": "19da7b21-0fc2-4999-bf06-22875f9ea427",
+    "title": "测试",
+    "category": "AI工具",
+    "description": "测试",
+    "download_url": "https://github.com/CodeCat250704/AIEcology.git",
+    "cover_url": "/bata/uploads/1786940204_2.png",
+    "screenshots": [
+        "/bata/uploads/1786940204_2.png"
+    ],
+    "doc_content": "    { \"title\": \"XXX\", \"subtitle\": \"XXX\", \"category\": \"XXX\", \"date\": \"XXX\" }",
+    "author": "CodeCat250704",
+    "date": "2026-08-17 12:16:44"
+}
