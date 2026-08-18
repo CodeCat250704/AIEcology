@@ -9,6 +9,7 @@ from flask import Flask, jsonify, request, send_from_directory, session
 from threading import Thread
 from datetime import timedelta
 from werkzeug.utils import secure_filename
+from supabase import create_client, Client
 
 # 禁用 SSL 警告
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -179,6 +180,11 @@ def create_work():
         with open(os.path.join(works_dir, f'{work_id}.json'), 'w', encoding='utf-8') as f:
             json.dump(new_work, f, ensure_ascii=False, indent=4)
 
+        # 【关键补充】：同步写入 Supabase 缓存，并带上时间戳
+        cache_work = new_work.copy()
+        cache_work['created_at'] = time.time()
+        supabase.table('works_cache').insert(cache_work).execute()
+
         return jsonify({"success": True, "message": "作品发布成功"})
     except Exception as e:
         print(f"发布作品报错: {e}")
@@ -294,11 +300,17 @@ def create_project_post():
         }
         with open(os.path.join(PROJECT_DIR, f'{post_id}.json'), 'w', encoding='utf-8') as f:
             json.dump(new_post, f, ensure_ascii=False, indent=4)
+
+        # 【关键补充】：同步写入 Supabase 缓存，并带上时间戳
+        cache_post = new_post.copy()
+        cache_post['created_at'] = time.time()
+        supabase.table('projects_cache').insert(cache_post).execute()
+
         return jsonify({"success": True, "message": "发布成功"})
     except Exception as e:
         print(f"项目发布报错: {e}")
         return jsonify({"success": False, "message": "服务器内部错误"}), 500
-
+    
 @app.route('/api/project/apply', methods=['POST'])
 def apply_project():
     try:
@@ -472,11 +484,17 @@ def create_resource():
         }
         with open(os.path.join(RES_DIR, f'{res_id}.json'), 'w', encoding='utf-8') as f:
             json.dump(new_res, f, ensure_ascii=False, indent=4)
+
+        # 【关键补充】：同步写入 Supabase 缓存，并带上时间戳
+        cache_res = new_res.copy()
+        cache_res['created_at'] = time.time()
+        supabase.table('resources_cache').insert(cache_res).execute()
+
         return jsonify({"success": True, "message": "资源发布成功"})
     except Exception as e:
         print(f"资源发布错误: {e}")
         return jsonify({"success": False, "message": "服务器错误"}), 500
-
+    
 @app.route('/api/resource/comments', methods=['GET'])
 def get_comments():
     raw_query = request.query_string.decode('utf-8')
