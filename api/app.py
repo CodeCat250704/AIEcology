@@ -53,7 +53,7 @@ def read_bata_json(sub_path):
 # ==========================================
 SUPABASE_URL = "https://tapavesjpfegmieqsxrt.supabase.co"
 # 【注意】：请将下面这一行替换为您在 GitHub 页面点开眼睛图标后看到的真实 Secret Key！
-SUPABASE_KEY = "sb_secret_O37K-hXDCRCgypaOzpthAw_5rdmtQ-p"  
+SUPABASE_KEY = "sb_secret_X21Tff2eroALJyfQjQMiVA_uyRLAYdi"  
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 # ==========================================
 # 1. 前端静态页面托管
@@ -194,7 +194,10 @@ def create_work():
         return jsonify({"success": True, "message": "作品发布成功"})
     except Exception as e:
         print(f"发布作品报错: {e}")
-        return jsonify({"success": False, "message": "服务器内部错误"}), 500
+        print(f"🚨 致命报错详情: {e}")  # 加个显眼的符号，方便在终端找
+        import traceback
+        traceback.print_exc()          # 这一行会打印出最底层的详细报错堆栈
+    return jsonify({"success": False, "message": "服务器内部错误"}), 500
 
 @app.route('/api/works/view', methods=['POST'])
 def increment_view():
