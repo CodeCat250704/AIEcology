@@ -7,7 +7,7 @@ from supabase import create_client, Client
 # 1. 配置 Supabase 连接（使用您的真实密钥）
 SUPABASE_URL = "https://tapavesjpfegmieqsxrt.supabase.co"
 # 请把这里换成您在前几步获取的真实 Secret Key！
-SUPABASE_KEY = "sb_secret_这里替换为您真实的SecretKey"
+SUPABASE_KEY = "sb_secret_O37K-hXDCRCgypaOzpthAw_5rdmtQ-p"
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 # 项目根目录路径

@@ -48,7 +48,13 @@ def read_bata_json(sub_path):
     except Exception as e:
         print(f"读取 {file_path} 报错: {e}")
         return None
-
+# ==========================================
+# 0.5 Supabase 客户端配置 (请把这段粘贴到这里！)
+# ==========================================
+SUPABASE_URL = "https://tapavesjpfegmieqsxrt.supabase.co"
+# 【注意】：请将下面这一行替换为您在 GitHub 页面点开眼睛图标后看到的真实 Secret Key！
+SUPABASE_KEY = "sb_secret_O37K-hXDCRCgypaOzpthAw_5rdmtQ-p"  
+supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 # ==========================================
 # 1. 前端静态页面托管
 # ==========================================
