@@ -3,69 +3,75 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>登录 · AI项目生态</title>
+    <title>登录 / 注册 · AI项目生态</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-    <div class="login-wrapper">
-        <div class="login-card">
-            <div class="login-header">
-                <div class="logo">
-                    <span class="logo-icon"><i class="fa-solid fa-cube"></i></span>
-                    <span class="logo-text">AI项目生态</span>
-                </div>
-                <h2>欢迎回来</h2>
-                <p class="sub-text">登录您的账号以访问社区</p>
+    <div class="wrapper">
+        <!-- 背景装饰波浪 -->
+        <div class="ocean">
+            <div class="wave"></div>
+            <div class="wave"></div>
+        </div>
+
+        <!-- 核心卡片容器 -->
+        <div class="container" id="container">
+            
+            <!-- 右侧：注册面板 -->
+            <div class="form-container sign-up-container">
+                <form id="registerForm">
+                    <h1>创建账号</h1>
+                    <div class="social-container">
+                        <a href="/api/auth/github" class="social"><i class="fa-brands fa-github"></i></a>
+                        <a href="#" class="social"><i class="fa-brands fa-google"></i></a>
+                    </div>
+                    <span>或使用邮箱注册</span>
+                    <input type="text" name="username" placeholder="用户名" required />
+                    <input type="email" name="email" placeholder="邮箱" required />
+                    <input type="password" name="password" placeholder="密码" required />
+                    <button type="submit" id="registerBtn">立即注册</button>
+                </form>
             </div>
 
-             <!-- 登录表单 -->
-            <form class="login-form" id="loginForm">
-                <div class="form-group">
-                    <label for="username">账号 / 邮箱</label>
-                    <input type="text" id="loginUsername" name="username" placeholder="请输入您的用户名或邮箱" required autocomplete="username">
-                </div>
-                
-                <div class="form-group">
-                    <label for="password">密码</label>
-                    <input type="password" id="password" name="password" placeholder="请输入您的密码" required autocomplete="current-password">
-                </div>
+            <!-- 左侧：登录面板 -->
+            <div class="form-container sign-in-container">
+                <form id="loginForm">
+                    <h1>欢迎回来</h1>
+                    <div class="social-container">
+                        <a href="/api/auth/github" class="social"><i class="fa-brands fa-github"></i></a>
+                        <a href="#" class="social"><i class="fa-brands fa-google"></i></a>
+                    </div>
+                    <span>或使用您的账号登录</span>
+                    <input type="text" id="loginUsername" name="username" placeholder="用户名 / 邮箱" required />
+                    <input type="password" id="loginPassword" name="password" placeholder="密码" required />
+                    <div class="captcha-box">
+                        <input type="text" name="captcha" placeholder="图形验证码" required />
+                        <img src="/api/auth/captcha" alt="验证码" class="captcha-img" id="captchaImg" title="点击刷新" onclick="this.src='/api/auth/captcha?t='+new Date().getTime()" />
+                    </div>
+                    <a href="#">忘记密码?</a>
+                    <button type="submit" id="loginBtn">登 录</button>
+                </form>
+            </div>
 
-                <!-- 图片验证码区域 -->
-                <div class="form-group captcha-group">
-                    <label for="captcha">图形验证码</label>
-                    <div class="captcha-container">
-                        <input type="text" id="captcha" name="captcha" placeholder="输入验证码" required autocomplete="off">
-                        <img src="/api/auth/captcha" alt="验证码" class="captcha-image" id="captchaImage" title="点击刷新">
+            <!-- 覆盖层：交互切换 -->
+            <div class="overlay-container">
+                <div class="overlay">
+                    <div class="overlay-panel overlay-left">
+                        <h1>已有账号？</h1>
+                        <p>直接登录，继续您的 AI 生态之旅</p>
+                        <button class="ghost" id="signIn">前往登录</button>
+                    </div>
+                    <div class="overlay-panel overlay-right">
+                        <h1>加入我们</h1>
+                        <p>注册成为开发者，分享您的创意</p>
+                        <button class="ghost" id="signUp">立即注册</button>
                     </div>
                 </div>
-
-                <div class="form-options">
-                    <label class="checkbox-label">
-                        <input type="checkbox" name="remember_me"> 记住我
-                    </label>
-                    <a href="/gitin/forgot-password" class="forgot-link">忘记密码?</a>
-                </div>
-
-                <button type="submit" class="btn-login-submit">登 录</button>
-            </form>
-
-            <!-- 第三方登录引导 (GitHub OAuth) -->
-            <div class="social-login">
-                <p class="or-divider">或使用以下方式登录</p>
-                <div class="social-buttons">
-                    <!-- 跳转去后端，由后端触发 GitHub OAuth 流程 -->
-                    <a href="/api/auth/github" class="social-btn github">
-                        <i class="fa-brands fa-github"></i> GitHub 关联登录
-                    </a>
-                </div>
-            </div>
-
-            <div class="login-footer">
-                还没有账号？ <a href="/gitin/register.html">立即注册</a>
             </div>
         </div>
     </div>
+
     <script src="script.js"></script>
 </body>
 </html>

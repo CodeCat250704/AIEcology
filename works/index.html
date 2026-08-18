@@ -20,11 +20,16 @@
                 <a href="/legal/index.html">支持</a>
                 </nav>
         </div>
-        <div class="nav-right">
+                <div class="nav-right">
+            <!-- 未登录状态 -->
             <a href="/gitin/index.html" class="btn-login" id="loginBtn">登录</a>
-            <div class="user-dropdown" id="userDropdown" style="display:none; align-items:center; gap:12px;">
-                <span style="color:var(--primary-purple);font-weight:500;" id="userNameDisplay">用户</span>
-                <a href="#" id="logoutBtn" style="font-size:0.85rem; color:#888; text-decoration:none;">退出</a>
+            
+            <!-- 登录后状态 (默认隐藏) -->
+            <div class="user-dropdown" id="userDropdown" style="display:none; align-items:center; gap:12px; cursor:pointer;">
+                <a href="/user/index.html" id="userNameLink" style="text-decoration:none; color:var(--primary-purple);">
+                    <span style="font-weight:500;" id="userNameDisplay">用户</span>
+                </a>
+                <a href="#" id="logoutBtn" style="font-size:0.85rem; color:#888; text-decoration:none; transition:0.2s; margin-left:5px;">退出</a>
             </div>
         </div>
     </header>
