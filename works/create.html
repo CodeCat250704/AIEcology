@@ -84,7 +84,12 @@
         </form>
     </div>
 
-    <script>
+        <script>
+        // ================================
+        // 配置云端 API 地址
+        // ================================
+        const API_BASE_URL = 'https://tapavesjpfegmieqsxrt.supabase.co/functions/v1/core-api';
+
         // 选择文件后，显示文件名提示效果
         document.getElementById('cover_img').addEventListener('change', function(e) {
             const fileName = document.getElementById('coverFileName');
@@ -117,7 +122,8 @@
             const formData = new FormData(form); // 自动处理文本和文件混合
 
             try {
-                const res = await fetch('/api/works/create', {
+                // 【关键修改】：将 /api/ 改为云端 API_BASE_URL
+                const res = await fetch(`${API_BASE_URL}/works/create`, {
                     method: 'POST',
                     body: formData
                 });
@@ -129,6 +135,7 @@
                     alert('发布失败: ' + result.message);
                 }
             } catch (err) {
+                console.error(err);
                 alert('网络连接失败，请稍后重试');
             } finally {
                 btn.innerText = originalText;
