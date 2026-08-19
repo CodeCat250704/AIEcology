@@ -1,4 +1,4 @@
-const API_BASE_URL = 'https://tapavesjpfegmieqsxrt.supabase.co/functions/v1/api-main';
+const API_BASE_URL = 'https://tapavesjpfegmieqsxrt.supabase.co/functions/v1/core-api';
 
 class HomeController {
     constructor() { 
