@@ -1,3 +1,6 @@
+// 新增统一的云端 API 地址定义
+const API_BASE_URL = 'https://tapavesjpfegmieqsxrt.supabase.co/functions/v1/core-api';
+
 document.addEventListener('DOMContentLoaded', async () => {
     if (typeof checkLoginStatus === 'function') await checkLoginStatus();
 
@@ -11,8 +14,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     try {
-        // 1. 获取作品详情数据
-        const res = await fetch(`/api/works/detail?id=${id}`);
+        // 1. 获取作品详情数据 (已修改为云端地址)
+        const res = await fetch(`${API_BASE_URL}/works/detail?id=${id}`);
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const work = await res.json();
         
@@ -21,8 +24,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             return;
         }
 
-        // 2. 【关键同步】：加载详情页时，触发观看数 +1
-        await fetch('/api/works/view', {
+        // 2. 【关键同步】：加载详情页时，触发观看数 +1 (已修改为云端地址)
+        await fetch(`${API_BASE_URL}/works/view`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ id: work.id })
@@ -39,7 +42,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 function renderDetail(work) {
     const container = document.getElementById('detailContainer');
-    if (!container) return;
+    if (!container) return; // 如果找不到容器，直接退出，防止报错
 
     const coverHtml = work.cover_url 
         ? `<img src="${work.cover_url}" alt="${work.title}">` 
@@ -118,14 +121,14 @@ function renderDetail(work) {
     `;
 }
 
-// 全局函数：提交作品评论
+// 全局函数：提交作品评论 (已修改为云端地址)
 window.submitWorkComment = async function(workId) {
     const contentEl = document.getElementById('newCommentText');
     const content = contentEl.value.trim();
     if (!content) { alert("请输入评论内容"); return; }
 
     try {
-        const res = await fetch('/api/works/comment', {
+        const res = await fetch(`${API_BASE_URL}/works/comment`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ work_id: workId, content })

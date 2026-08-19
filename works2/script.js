@@ -1,9 +1,13 @@
+// 请确保所有子页面统一使用这个云端 API 地址
+const API_BASE_URL = 'https://tapavesjpfegmieqsxrt.supabase.co/functions/v1/core-api';
+
 document.addEventListener('DOMContentLoaded', async () => {
     if (typeof checkLoginStatus === 'function') await checkLoginStatus(); 
 
     const container = document.getElementById('worksContainer');
     try {
-        const res = await fetch('/api/works');
+        // 将本地 /api/works 替换为云端完整地址
+        const res = await fetch(`${API_BASE_URL}/works`);
         const data = await res.json();
         
         container.innerHTML = '';
