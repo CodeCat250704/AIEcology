@@ -122,6 +122,47 @@ Deno.serve(async (req: Request) => {
             return new Response(JSON.stringify(data), { headers: corsHeaders })
         }
 
+                // ===== 首页及通用数据接口 =====
+        if (path === '/banner' && method === 'GET') {
+            const bannerData = {
+                title: "AI 项目生态社区",
+                description: "演示开放、设计共享，欢迎来到 AIGC 爱好者的创意世界！",
+                icon: "fa-solid fa-rocket"
+            };
+            return new Response(JSON.stringify(bannerData), { headers: corsHeaders });
+        }
+
+        if (path === '/links' && method === 'GET') {
+            // 如果你想从数据库读取快捷入口，就写 select。
+            // 这里返回一个空数组，避免前端直接报错崩溃，等有空再往数据库写。
+            return new Response(JSON.stringify([]), { headers: corsHeaders });
+        }
+
+        if (path === '/timeline' && method === 'GET') {
+            return new Response(JSON.stringify([]), { headers: corsHeaders });
+        }
+
+        // ===== 跨模块项目数据互通 =====
+        // 注意：首页的 loadForumStream 请求的是 /project/list
+        if (path === '/project/list' && method === 'GET') {
+            const { data, error } = await supabase.from('projects_cache').select('*').order('created_at', { ascending: false });
+            if (error) throw new Error(error.message);
+            return new Response(JSON.stringify(data), { headers: corsHeaders });
+        }
+
+        // 首页的 loadHotProjects 请求的是 /works
+        if (path === '/works' && method === 'GET') {
+            const { data, error } = await supabase.from('works_cache').select('*').order('created_at', { ascending: false });
+            if (error) throw new Error(error.message);
+            return new Response(JSON.stringify(data), { headers: corsHeaders });
+        }
+
+        // ===== 用户认证 /auth/me =====
+        if (path === '/auth/me' && method === 'GET') {
+            // 暂时返回未登录状态，保证前端能渲染出“登录”按钮
+            return new Response(JSON.stringify({ isLoggedIn: false, user: null }), { headers: corsHeaders });
+        }
+        
         // ===== 发布作品 =====
         if (path === '/works/create' && method === 'POST') {
             const formData = await req.formData()
