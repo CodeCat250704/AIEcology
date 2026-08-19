@@ -1,4 +1,4 @@
-cconst API_BASE_URL = 'https://tapavesjpfegmieqsxrt.supabase.co/functions/v1/api-main';
+const API_BASE_URL = 'https://tapavesjpfegmieqsxrt.supabase.co/functions/v1/api-main';
 class HomeController {
     constructor() { 
         this.checkLoginStatus(); 
