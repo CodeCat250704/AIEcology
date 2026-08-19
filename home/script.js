@@ -1,5 +1,4 @@
-const API_BASE_URL = '/api';
-
+cconst API_BASE_URL = 'https://tapavesjpfegmieqsxrt.supabase.co/functions/v1/api-main';
 class HomeController {
     constructor() { 
         this.checkLoginStatus(); 
@@ -217,7 +216,7 @@ class HomeController {
             div.addEventListener('click', () => {
                 if(projId) {
                     window.location.href = `/works/detail.html?id=${projId}`;
-                } else {const API_BASE_URL = '/api';
+                } else {const API_BASE_URL = 'https://tapavesjpfegmieqsxrt.supabase.co/functions/v1/api-main';
 
 class HomeController {
     constructor() { 
