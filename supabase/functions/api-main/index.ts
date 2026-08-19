@@ -1,7 +1,7 @@
 // supabase/functions/api-main/index.ts
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
-// 直接写在文件里，不用去外面引用了！
+// 跨域请求头
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
@@ -11,6 +11,7 @@ const supabaseUrl = Deno.env.get('SUPABASE_URL') ?? 'https://tapavesjpfegmieqsxr
 const supabaseKey = Deno.env.get('SUPABASE_ANON_KEY') ?? 'your-anon-key'
 const supabase = createClient(supabaseUrl, supabaseKey)
 
+// 验证码临时存储
 let CAPTCHA_STORE: string = ""
 
 // ==========================================
@@ -23,7 +24,6 @@ function generateCaptchaSVG(): { svg: string, code: string } {
         code += chars.charAt(Math.floor(Math.random() * chars.length))
     }
     CAPTCHA_STORE = code
-
     const width = 120, height = 40
     let lines = ''
     for (let i = 0; i < 5; i++) {
@@ -37,7 +37,6 @@ function generateCaptchaSVG(): { svg: string, code: string } {
         const r = Math.floor(Math.random() * 2) + 1
         dots += `<circle cx="${x}" cy="${y}" r="${r}" fill="#e0d6ef" />`
     }
-
     const svg = `<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">
     <rect width="${width}" height="${height}" fill="#f8f5fc" rx="4" ry="4"/>
@@ -58,9 +57,11 @@ Deno.serve(async (req: Request) => {
     }
 
     const url = new URL(req.url)
+    // 【核心修复】：去除路由前缀并保留左侧斜杠
     const path = url.pathname.replace('/functions/v1/api-main', '')
     const method = req.method
 
+    // 模拟当前登录用户 (实际生产需解析 JWT)
     let currentUser = "Guest"
     const authHeader = req.headers.get('Authorization')
     if (authHeader) {
@@ -102,27 +103,25 @@ Deno.serve(async (req: Request) => {
             return new Response(JSON.stringify({ success: true, user: { id: user.id, name: user.username } }), { headers: corsHeaders })
         }
 
+        // ===== 登出 (占位，实际需清空 Session) =====
+        if (path === '/auth/logout' && method === 'POST') {
+            return new Response(JSON.stringify({ success: true }), { headers: corsHeaders })
+        }
+
+        // ===== 用户状态检测 /auth/me =====
+        if (path === '/auth/me' && method === 'GET') {
+            return new Response(JSON.stringify({ isLoggedIn: false, user: null }), { headers: corsHeaders })
+        }
+
         // ===== GitHub OAuth 跳转 =====
         if (path === '/auth/github' && method === 'GET') {
             const CLIENT_ID = "Ov23lifXykyiDvGXUGiT"
-            const redirectUri = "https://你的域名.com/api/auth/github/callback"
+            const redirectUri = "https://duckpublic.qd.je/api/auth/github/callback"
             const githubUrl = `https://github.com/login/oauth/authorize?client_id=${CLIENT_ID}&redirect_uri=${redirectUri}`
             return new Response(null, { status: 302, headers: { Location: githubUrl, ...corsHeaders } })
         }
-        
-        // ===== GitHub Callback (占位) =====
-        if (path === '/auth/github/callback' && method === 'GET') {
-            return new Response("GitHub Callback received. Please implement token exchange logic here.", { headers: corsHeaders })
-        }
 
-        // ===== 作品库列表 =====
-        if (path === '/works/list' && method === 'GET') {
-            const { data, error } = await supabase.from('works_cache').select('*').order('created_at', { ascending: false })
-            if (error) throw new Error(error.message)
-            return new Response(JSON.stringify(data), { headers: corsHeaders })
-        }
-
-                // ===== 首页及通用数据接口 =====
+        // ===== 首页数据：轮播图 =====
         if (path === '/banner' && method === 'GET') {
             const bannerData = {
                 title: "AI 项目生态社区",
@@ -132,37 +131,37 @@ Deno.serve(async (req: Request) => {
             return new Response(JSON.stringify(bannerData), { headers: corsHeaders });
         }
 
+        // ===== 首页数据：快捷入口 =====
         if (path === '/links' && method === 'GET') {
-            // 如果你想从数据库读取快捷入口，就写 select。
-            // 这里返回一个空数组，避免前端直接报错崩溃，等有空再往数据库写。
             return new Response(JSON.stringify([]), { headers: corsHeaders });
         }
 
+        // ===== 首页数据：时间轴 =====
         if (path === '/timeline' && method === 'GET') {
             return new Response(JSON.stringify([]), { headers: corsHeaders });
         }
 
-        // ===== 跨模块项目数据互通 =====
-        // 注意：首页的 loadForumStream 请求的是 /project/list
+        // ===== 论坛流：项目中心列表 (供首页调用) =====
         if (path === '/project/list' && method === 'GET') {
             const { data, error } = await supabase.from('projects_cache').select('*').order('created_at', { ascending: false });
             if (error) throw new Error(error.message);
             return new Response(JSON.stringify(data), { headers: corsHeaders });
         }
 
-        // 首页的 loadHotProjects 请求的是 /works
+        // ===== 热门项目：作品库列表 (供首页调用) =====
         if (path === '/works' && method === 'GET') {
             const { data, error } = await supabase.from('works_cache').select('*').order('created_at', { ascending: false });
             if (error) throw new Error(error.message);
             return new Response(JSON.stringify(data), { headers: corsHeaders });
         }
 
-        // ===== 用户认证 /auth/me =====
-        if (path === '/auth/me' && method === 'GET') {
-            // 暂时返回未登录状态，保证前端能渲染出“登录”按钮
-            return new Response(JSON.stringify({ isLoggedIn: false, user: null }), { headers: corsHeaders });
+        // ===== 作品库列表 (指定 API) =====
+        if (path === '/works/list' && method === 'GET') {
+            const { data, error } = await supabase.from('works_cache').select('*').order('created_at', { ascending: false });
+            if (error) throw new Error(error.message);
+            return new Response(JSON.stringify(data), { headers: corsHeaders });
         }
-        
+
         // ===== 发布作品 =====
         if (path === '/works/create' && method === 'POST') {
             const formData = await req.formData()
@@ -189,7 +188,13 @@ Deno.serve(async (req: Request) => {
             return new Response(JSON.stringify({ success: true, message: '作品发布成功' }), { headers: corsHeaders })
         }
 
+        // ===== 根路径健康检查 =====
+        if (path === '' || path === '/') {
+            return new Response(JSON.stringify({ message: 'Supabase Function is running!' }), { headers: corsHeaders });
+        }
+
         // ===== 默认 404 =====
+        console.warn(`未匹配的路由: ${method} ${path}`);
         return new Response(JSON.stringify({ error: '404 Not Found' }), { status: 404, headers: corsHeaders })
 
     } catch (err: any) {
