@@ -143,9 +143,10 @@ Deno.serve(async (req: Request) => {
 
         // ===== 作品库 (Works) =====
         if ((path === 'works' || path === '/works') && method === 'GET') {
-            const { data, error } = await supabase.from('works_cache').select('*').order('views', { ascending: false });
+            const { data, error } = await supabase.from('works_cache').select('*').order('created_at', { ascending: false });
             if (error) throw new Error(error.message);
-            return new Response(JSON.stringify(data), { headers: corsHeaders });
+            // 关键点：如果 data 为空，直接返回空数组，防止前端报错
+            return new Response(JSON.stringify(data || []), { headers: corsHeaders });
         }
 
         if ((path === 'works/detail' || path === '/works/detail') && method === 'GET') {
@@ -194,7 +195,7 @@ Deno.serve(async (req: Request) => {
             if (filterType !== 'all') query = query.eq('type', filterType);
             const { data, error } = await query.order('created_at', { ascending: false });
             if (error) throw new Error(error.message);
-            return new Response(JSON.stringify(data), { headers: corsHeaders });
+            return new Response(JSON.stringify(data || []), { headers: corsHeaders });
         }
 
         if ((path === 'project/detail' || path === '/project/detail') && method === 'GET') {

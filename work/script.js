@@ -4,11 +4,21 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (!container) return;
 
     try {
+        // 请求作品列表
+        console.log("正在请求 /works 接口..."); // 添加调试日志
         const res = await fetch(`${API_BASE_URL}/works`);
-        if (!res.ok) throw new Error(`状态码: ${res.status}`);
+        
+        if (!res.ok) {
+            // 如果状态码不是200，直接抛出异常防止解析报错
+            throw new Error(`网络请求失败，状态码: ${res.status}`);
+        }
+
         const data = await res.json();
+        console.log("获取到的数据:", data); // 打印出来给您看
         
         container.innerHTML = '';
+
+        // === 最严谨的安全拦截 ===
         if (!data || !Array.isArray(data) || data.length === 0) {
             container.innerHTML = `
                 <div class="empty-state">
@@ -20,6 +30,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             return;
         }
 
+        // 循环渲染
         data.forEach(work => {
             if (!work.title) return;
             const div = document.createElement('div');
@@ -53,12 +64,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
 
     } catch (err) {
-        console.error(err);
+        console.error("作品库加载报错:", err);
         container.innerHTML = `
             <div class="empty-state" style="border-color:#ffcdd2; color:#d32f2f;">
                 <i class="fa-regular fa-circle-exclamation" style="color:#d32f2f;"></i>
                 <h3>加载数据失败</h3>
-                <p>请检查网络连接或后端服务状态。</p>
+                <p>错误信息: ${err.message || '未知错误'}</p>
             </div>
         `;
     }
