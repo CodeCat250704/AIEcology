@@ -1,0 +1,21 @@
+name: Sync Data to Bata
+on:
+  repository_dispatch:
+    types: [sync-data]
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Create or Update Bata File
+        run: |
+          mkdir -p bata/works
+          echo '${{ github.event.client_payload.data }}' > bata/works/${{ github.event.client_payload.id }}.json
+      - name: Commit and Push
+        run: |
+          git config user.name "Supabase Sync Bot"
+          git config user.email "bot@supabase.com"
+          git add -A
+          git diff --quiet && git diff --staged --quiet || git commit -m "Auto sync from Supabase: ${{ github.event.client_payload.id }}"
+          git push
