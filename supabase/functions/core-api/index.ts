@@ -1,4 +1,4 @@
-// supabase/functions/api-main/index.ts
+// supabase/functions/core-api/index.ts
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
 // ==========================================
@@ -13,7 +13,7 @@ const supabaseUrl = Deno.env.get('SUPABASE_URL') ?? 'https://tapavesjpfegmieqsxr
 const supabaseKey = Deno.env.get('SUPABASE_ANON_KEY') ?? 'your-anon-key'
 const supabase = createClient(supabaseUrl, supabaseKey)
 
-// 验证码临时存储 (无状态环境依赖缓存)
+// 验证码临时存储
 let CAPTCHA_STORE: string = ""
 
 // ==========================================
@@ -25,7 +25,7 @@ function generateCaptchaSVG(): { svg: string, code: string } {
     for (let i = 0; i < 4; i++) {
         code += chars.charAt(Math.floor(Math.random() * chars.length))
     }
-    CAPTCHA_STORE = code // 存入内存
+    CAPTCHA_STORE = code
     const width = 120, height = 40
     let lines = ''
     for (let i = 0; i < 5; i++) {
@@ -53,176 +53,36 @@ function generateCaptchaSVG(): { svg: string, code: string } {
 // 2. 核心 Deno 服务处理
 // ==========================================
 Deno.serve(async (req: Request) => {
-    // 处理 CORS 跨域请求 (浏览器预检)
+    // 处理 CORS 跨域请求
     if (req.method === 'OPTIONS') {
         return new Response('ok', { headers: corsHeaders })
     }
 
     const url = new URL(req.url)
-    // 移除函数前缀，保留 / 以匹配路由
-    const path = url.pathname.replace('/functions/v1/api-main', '')
+    // 【核心修改】：用 split 分割，直接提取函数名后面的部分，无视任何斜杠！
+    const parts = url.pathname.split('/functions/v1/core-api/');
+    const path = parts.length > 1 ? parts[1] : '';
     const method = req.method
 
-    // 模拟获取当前登录用户 (生产环境需解析 JWT Token)
+    // 模拟当前登录用户 (生产环境需解析 JWT)
     let currentUser = "Guest"
     const authHeader = req.headers.get('Authorization')
     if (authHeader) {
-        currentUser = "CodeCat250704" // 演示用
+        currentUser = "CodeCat250704"
     }
 
     try {
-        // ==========================================
-        // 3. 路由分发逻辑
-        // ==========================================
-
-        // --- 公共基础接口 ---
+        // ===== 根路径健康检查 =====
         if (path === '' || path === '/') {
-            return new Response(JSON.stringify({ message: 'Supabase Function is running!' }), { headers: corsHeaders })
+            return new Response(JSON.stringify({ success: true, message: 'Hello from core-api' }), { headers: corsHeaders })
         }
 
-        if (path === '/banner' && method === 'GET') {
-            return new Response(JSON.stringify({
-                title: "AI 项目生态社区",
-                description: "演示开放、设计共享，欢迎来到 AIGC 爱好者的创意世界！",
-                icon: "fa-solid fa-rocket"
-            }), { headers: corsHeaders });
-        }
-
-        if (path === '/links' && method === 'GET') {
-            // 读取快捷入口 (可从数据库 get 出数据，暂时返回空列表保证不报错)
-            return new Response(JSON.stringify([]), { headers: corsHeaders });
-        }
-
-        if (path === '/timeline' && method === 'GET') {
-            return new Response(JSON.stringify([]), { headers: corsHeaders });
-        }
-
-        if (path === '/projects' && method === 'GET') {
-            const { data, error } = await supabase.from('projects_cache').select('*').order('views', { ascending: false });
-            if (error) throw new Error(error.message);
-            return new Response(JSON.stringify(data), { headers: corsHeaders });
-        }
-
-
-        // --- 作品库 Works ---
-        if (path === '/works' && method === 'GET') {
-            const { data, error } = await supabase.from('works_cache').select('*').order('views', { ascending: false });
-            if (error) throw new Error(error.message);
-            return new Response(JSON.stringify(data), { headers: corsHeaders });
-        }
-
-        if (path === '/works/detail' && method === 'GET') {
-            const workId = url.searchParams.get('id');
-            if (!workId) return new Response(JSON.stringify({ success: false, message: '缺少ID参数' }), { status: 400, headers: corsHeaders });
-            const { data, error } = await supabase.from('works_cache').select('*').eq('id', workId).single();
-            if (error || !data) return new Response(JSON.stringify({ success: false, message: '作品不存在' }), { status: 404, headers: corsHeaders });
-            return new Response(JSON.stringify(data), { headers: corsHeaders });
-        }
-
-        if (path === '/works/create' && method === 'POST') {
-            const formData = await req.formData()
-            const title = formData.get('title')?.toString() || ''
-            const category = formData.get('category')?.toString() || ''
-            const description = formData.get('description')?.toString() || ''
-            if (!title || !description) {
-                return new Response(JSON.stringify({ success: false, message: '标题和描述不能为空' }), { status: 400, headers: corsHeaders })
-            }
-            // 提取图片暂时存放到云端格式
-            const newWork = {
-                id: crypto.randomUUID(),
-                title, category, description,
-                author: currentUser,
-                date: new Date().toLocaleString(),
-                views: 0, likes: 0, comments: 0,
-                created_at: Date.now() / 1000
-            }
-            const { error } = await supabase.from('works_cache').insert(newWork)
-            if (error) throw new Error(error.message)
-            return new Response(JSON.stringify({ success: true, message: '作品发布成功' }), { headers: corsHeaders })
-        }
-
-        if (path === '/works/view' && method === 'POST') {
-            const body = await req.json();
-            const workId = body.id;
-            if (!workId) return new Response(JSON.stringify({ success: false, message: '缺少ID' }), { status: 400, headers: corsHeaders });
-            const { data, error } = await supabase.from('works_cache').select('views').eq('id', workId).single();
-            if (error || !data) throw new Error('找不到作品');
-            await supabase.from('works_cache').update({ views: (data.views || 0) + 1 }).eq('id', workId);
-            return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
-        }
-
-
-        // --- 项目中心 Projects ---
-        if (path === '/project/list' && method === 'GET') {
-            const filterType = url.searchParams.get('type') || 'all';
-            let query = supabase.from('projects_cache').select('*');
-            if (filterType !== 'all') query = query.eq('type', filterType);
-            const { data, error } = await query.order('created_at', { ascending: false });
-            if (error) throw new Error(error.message);
-            return new Response(JSON.stringify(data), { headers: corsHeaders });
-        }
-
-        if (path === '/project/detail' && method === 'GET') {
-            const postId = url.searchParams.get('id');
-            if (!postId) return new Response(JSON.stringify({ success: false, message: '缺少ID参数' }), { status: 400, headers: corsHeaders });
-            const { data, error } = await supabase.from('projects_cache').select('*').eq('id', postId).single();
-            if (error || !data) return new Response(JSON.stringify({ success: false, message: '项目不存在' }), { status: 404, headers: corsHeaders });
-            return new Response(JSON.stringify(data), { headers: corsHeaders });
-        }
-
-        if (path === '/project/create' && method === 'POST') {
-            const formData = await req.formData();
-            const p_type = formData.get('type')?.toString() || 'recruit';
-            const title = formData.get('title')?.toString() || '';
-            const content = formData.get('content')?.toString() || '';
-            if (!title) return new Response(JSON.stringify({ success: false, message: '标题不能为空' }), { status: 400, headers: corsHeaders });
-            const newPost = {
-                id: crypto.randomUUID(), type: p_type, title, content,
-                author: currentUser, date: new Date().toLocaleString(),
-                replies: 0, created_at: Date.now() / 1000
-            };
-            const { error } = await supabase.from('projects_cache').insert(newPost);
-            if (error) throw new Error(error.message);
-            return new Response(JSON.stringify({ success: true, message: '发布成功' }), { headers: corsHeaders });
-        }
-
-
-        // --- 资源中心 Resources ---
-        if (path === '/resource/list' && method === 'GET') {
-            const { data, error } = await supabase.from('resources_cache').select('*').order('created_at', { ascending: false });
-            if (error) throw new Error(error.message);
-            return new Response(JSON.stringify(data), { headers: corsHeaders });
-        }
-
-        if (path === '/resource/detail' && method === 'GET') {
-            const resId = url.searchParams.get('id');
-            if (!resId) return new Response(JSON.stringify({ error: 'Missing ID' }), { status: 400, headers: corsHeaders });
-            const { data, error } = await supabase.from('resources_cache').select('*').eq('id', resId).single();
-            if (error || !data) return new Response(JSON.stringify({ error: 'Not found' }), { status: 404, headers: corsHeaders });
-            return new Response(JSON.stringify(data), { headers: corsHeaders });
-        }
-
-        if (path === '/resource/create' && method === 'POST') {
-            const formData = await req.formData();
-            const title = formData.get('title')?.toString() || '';
-            const category = formData.get('category')?.toString() || '';
-            const description = formData.get('description')?.toString() || '';
-            const download_url = formData.get('download_url')?.toString() || '';
-            if (!title || !download_url) return new Response(JSON.stringify({ success: false, message: '标题和下载地址不能为空' }), { status: 400, headers: corsHeaders });
-            const newRes = {
-                id: crypto.randomUUID(), title, category, description, download_url,
-                author: currentUser, date: new Date().toLocaleString(), created_at: Date.now() / 1000
-            };
-            const { error } = await supabase.from('resources_cache').insert(newRes);
-            if (error) throw new Error(error.message);
-            return new Response(JSON.stringify({ success: true, message: '资源发布成功' }), { headers: corsHeaders });
-        }
-
-
-        // --- 认证 Auth ---
+        // ===== 认证模块 (Auth) =====
         if (path === '/auth/captcha' && method === 'GET') {
             const { svg } = generateCaptchaSVG()
-            return new Response(svg, { headers: { 'Content-Type': 'image/svg+xml', ...corsHeaders } })
+            return new Response(svg, {
+                headers: { 'Content-Type': 'image/svg+xml', ...corsHeaders }
+            })
         }
 
         if (path === '/auth/login' && method === 'POST') {
@@ -256,14 +116,146 @@ Deno.serve(async (req: Request) => {
             return new Response(null, { status: 302, headers: { Location: `https://github.com/login/oauth/authorize?client_id=${CLIENT_ID}&redirect_uri=${redirectUri}`, ...corsHeaders } })
         }
 
+        // ===== 首页通用数据 =====
+        if (path === '/banner' && method === 'GET') {
+            return new Response(JSON.stringify({
+                title: "AI 项目生态社区",
+                description: "演示开放、设计共享，欢迎来到 AIGC 爱好者的创意世界！",
+                icon: "fa-solid fa-rocket"
+            }), { headers: corsHeaders });
+        }
 
-        // --- 协议与个人中心 ---
-        if (path === '/legal/list' && method === 'GET') {
-            const { data, error } = await supabase.from('legal_docs').select('*');
-            if (error) return new Response(JSON.stringify([]), { headers: corsHeaders });
+        if (path === '/links' && method === 'GET') {
+            return new Response(JSON.stringify([]), { headers: corsHeaders });
+        }
+
+        if (path === '/timeline' && method === 'GET') {
+            // 给一个前端能正常渲染的示例数据
+            const demoData = [
+                { date: '2026-08-15', title: '全新社区系统正式上线！' },
+                { date: '2026-08-14', title: 'GitHub 数据同步机制部署完毕' }
+            ];
+            return new Response(JSON.stringify(demoData), { headers: corsHeaders });
+        }
+
+        if (path === '/projects' && method === 'GET') {
+            const { data, error } = await supabase.from('projects_cache').select('*').order('views', { ascending: false });
+            if (error) throw new Error(error.message);
             return new Response(JSON.stringify(data), { headers: corsHeaders });
         }
 
+        // ===== 作品库 (Works) =====
+        if (path === '/works' && method === 'GET') {
+            const { data, error } = await supabase.from('works_cache').select('*').order('views', { ascending: false });
+            if (error) throw new Error(error.message);
+            return new Response(JSON.stringify(data), { headers: corsHeaders });
+        }
+
+        if (path === '/works/detail' && method === 'GET') {
+            const workId = url.searchParams.get('id');
+            if (!workId) return new Response(JSON.stringify({ success: false, message: '缺少ID参数' }), { status: 400, headers: corsHeaders });
+            const { data, error } = await supabase.from('works_cache').select('*').eq('id', workId).single();
+            if (error || !data) return new Response(JSON.stringify({ success: false, message: '作品不存在' }), { status: 404, headers: corsHeaders });
+            return new Response(JSON.stringify(data), { headers: corsHeaders });
+        }
+
+        if (path === '/works/create' && method === 'POST') {
+            const formData = await req.formData()
+            const title = formData.get('title')?.toString() || ''
+            const category = formData.get('category')?.toString() || ''
+            const description = formData.get('description')?.toString() || ''
+            if (!title || !description) {
+                return new Response(JSON.stringify({ success: false, message: '标题和描述不能为空' }), { status: 400, headers: corsHeaders })
+            }
+            const newWork = {
+                id: crypto.randomUUID(),
+                title, category, description,
+                author: currentUser,
+                date: new Date().toLocaleString(),
+                views: 0, likes: 0, comments: 0,
+                created_at: Date.now() / 1000
+            }
+            const { error } = await supabase.from('works_cache').insert(newWork)
+            if (error) throw new Error(error.message)
+            return new Response(JSON.stringify({ success: true, message: '作品发布成功' }), { headers: corsHeaders })
+        }
+
+        if (path === '/works/view' && method === 'POST') {
+            const body = await req.json();
+            const workId = body.id;
+            if (!workId) return new Response(JSON.stringify({ success: false, message: '缺少ID' }), { status: 400, headers: corsHeaders });
+            const { data, error } = await supabase.from('works_cache').select('views').eq('id', workId).single();
+            if (error || !data) throw new Error('找不到作品');
+            await supabase.from('works_cache').update({ views: (data.views || 0) + 1 }).eq('id', workId);
+            return new Response(JSON.stringify({ success: true }), { headers: corsHeaders });
+        }
+
+        // ===== 项目中心 (Projects) =====
+        if (path === '/project/list' && method === 'GET') {
+            const filterType = url.searchParams.get('type') || 'all';
+            let query = supabase.from('projects_cache').select('*');
+            if (filterType !== 'all') query = query.eq('type', filterType);
+            const { data, error } = await query.order('created_at', { ascending: false });
+            if (error) throw new Error(error.message);
+            return new Response(JSON.stringify(data), { headers: corsHeaders });
+        }
+
+        if (path === '/project/detail' && method === 'GET') {
+            const postId = url.searchParams.get('id');
+            if (!postId) return new Response(JSON.stringify({ success: false, message: '缺少ID参数' }), { status: 400, headers: corsHeaders });
+            const { data, error } = await supabase.from('projects_cache').select('*').eq('id', postId).single();
+            if (error || !data) return new Response(JSON.stringify({ success: false, message: '项目不存在' }), { status: 404, headers: corsHeaders });
+            return new Response(JSON.stringify(data), { headers: corsHeaders });
+        }
+
+        if (path === '/project/create' && method === 'POST') {
+            const formData = await req.formData();
+            const p_type = formData.get('type')?.toString() || 'recruit';
+            const title = formData.get('title')?.toString() || '';
+            const content = formData.get('content')?.toString() || '';
+            if (!title) return new Response(JSON.stringify({ success: false, message: '标题不能为空' }), { status: 400, headers: corsHeaders });
+            const newPost = {
+                id: crypto.randomUUID(), type: p_type, title, content,
+                author: currentUser, date: new Date().toLocaleString(),
+                replies: 0, created_at: Date.now() / 1000
+            };
+            const { error } = await supabase.from('projects_cache').insert(newPost);
+            if (error) throw new Error(error.message);
+            return new Response(JSON.stringify({ success: true, message: '发布成功' }), { headers: corsHeaders });
+        }
+
+        // ===== 资源中心 (Resources) =====
+        if (path === '/resource/list' && method === 'GET') {
+            const { data, error } = await supabase.from('resources_cache').select('*').order('created_at', { ascending: false });
+            if (error) throw new Error(error.message);
+            return new Response(JSON.stringify(data), { headers: corsHeaders });
+        }
+
+        if (path === '/resource/detail' && method === 'GET') {
+            const resId = url.searchParams.get('id');
+            if (!resId) return new Response(JSON.stringify({ error: 'Missing ID' }), { status: 400, headers: corsHeaders });
+            const { data, error } = await supabase.from('resources_cache').select('*').eq('id', resId).single();
+            if (error || !data) return new Response(JSON.stringify({ error: 'Not found' }), { status: 404, headers: corsHeaders });
+            return new Response(JSON.stringify(data), { headers: corsHeaders });
+        }
+
+        if (path === '/resource/create' && method === 'POST') {
+            const formData = await req.formData();
+            const title = formData.get('title')?.toString() || '';
+            const category = formData.get('category')?.toString() || '';
+            const description = formData.get('description')?.toString() || '';
+            const download_url = formData.get('download_url')?.toString() || '';
+            if (!title || !download_url) return new Response(JSON.stringify({ success: false, message: '标题和下载地址不能为空' }), { status: 400, headers: corsHeaders });
+            const newRes = {
+                id: crypto.randomUUID(), title, category, description, download_url,
+                author: currentUser, date: new Date().toLocaleString(), created_at: Date.now() / 1000
+            };
+            const { error } = await supabase.from('resources_cache').insert(newRes);
+            if (error) throw new Error(error.message);
+            return new Response(JSON.stringify({ success: true, message: '资源发布成功' }), { headers: corsHeaders });
+        }
+
+        // ===== 个人中心统计 =====
         if (path === '/user/stats' && method === 'GET') {
             const { data: works } = await supabase.from('works_cache').select('*').eq('author', currentUser);
             const { data: projects } = await supabase.from('projects_cache').select('*').eq('author', currentUser);
@@ -275,8 +267,7 @@ Deno.serve(async (req: Request) => {
             }), { headers: corsHeaders });
         }
 
-
-        // --- 默认 404 ---
+        // ===== 默认 404 =====
         return new Response(JSON.stringify({ error: '404 Not Found' }), { status: 404, headers: corsHeaders })
 
     } catch (err: any) {

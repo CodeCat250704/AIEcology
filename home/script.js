@@ -89,6 +89,13 @@ class HomeController {
             container.innerHTML = `<div style="grid-column: 1/-1; text-align:center;color:#999;padding:20px;">暂无快捷入口</div>`;
             return;
         }
+
+        // 👇 加这一行！如果 data 不是数组，直接返回
+        if (!data || !Array.isArray(data) || data.length === 0) {
+            container.innerHTML = `<p style="color:#999;font-size:0.9rem;padding:20px;">暂无动态</p>`;
+            return;
+        }
+
         data.forEach(item => {
             const a = document.createElement('a');
             a.className = 'link-card'; 
