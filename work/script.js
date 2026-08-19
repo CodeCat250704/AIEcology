@@ -70,7 +70,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             div.style.cursor = 'pointer';
             div.addEventListener('click', () => {
                 if (work.id) {
-                    window.location.href = `/works/detail.html?id=${work.id}`;
+                    window.location.href = `/work/detail.html?id=${work.id}`;
                 }
             });
 
