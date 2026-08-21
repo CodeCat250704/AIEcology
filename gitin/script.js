@@ -1,3 +1,6 @@
+// 指定云端 API 的基础地址（非常重要！）
+const API_BASE_URL = 'https://tapavesjpfegmieqsxrt.supabase.co/functions/v1/core-api';
+
 // ==========================================
 // 1. 翻转动效控制
 // ==========================================
@@ -16,8 +19,6 @@ signInButton.addEventListener('click', () => {
 // ==========================================
 // 2. 前端对接后端 API
 // ==========================================
-const API_BASE_URL = '/api';
-
 // 处理登录
 document.getElementById('loginForm').addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -40,8 +41,8 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
             window.location.href = '/home/index.html';
         } else {
             alert('登录失败: ' + result.message);
-            // 刷新验证码
-            document.getElementById('captchaImg').src = `/api/auth/captcha?t=${new Date().getTime()}`;
+            // 刷新验证码（改为云端地址！）
+            document.getElementById('captchaImg').src = `${API_BASE_URL}/auth/captcha?t=${new Date().getTime()}`;
         }
     } catch (err) {
         alert('网络异常，请稍后重试');
@@ -50,7 +51,7 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
     }
 });
 
-// 处理注册 (实际注册逻辑在 api/app.py 的 /api/auth/register)
+// 处理注册
 document.getElementById('registerForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     const form = e.target;
