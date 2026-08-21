@@ -1,4 +1,3 @@
-const API_BASE_URL = window.API_BASE_URL || 'https://tapavesjpfegmieqsxrt.supabase.co/functions/v1/core-api';
 document.addEventListener('DOMContentLoaded', async () => {
     if (typeof checkLoginStatus === 'function') await checkLoginStatus();
     const id = new URLSearchParams(window.location.search).get('id');

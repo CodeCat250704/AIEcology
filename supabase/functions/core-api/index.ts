@@ -1,4 +1,3 @@
-// supabase/functions/core-api/index.ts
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
 // ==========================================
@@ -9,12 +8,23 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 }
 
-const supabaseUrl = Deno.env.get('SUPABASE_URL') ?? 'https://tapavesjpfegmieqsxrt.supabase.co'
-const supabaseKey = Deno.env.get('SUPABASE_ANON_KEY') ?? 'your-anon-key'
+// 【核心修复1】：直接写死正确的密钥，避免环境变量读取不到崩溃
+const supabaseUrl = 'https://tapavesjpfegmieqsxrt.supabase.co'
+const supabaseKey = 'sb_secret_BXnL2sb34hkBrRDUYI_7QA_6Uxk3UH7'
 const supabase = createClient(supabaseUrl, supabaseKey)
 
-// 验证码临时存储
 let CAPTCHA_STORE: string = ""
+
+// ==========================================
+// 【核心修复2】：纯JS原生UUID，彻底规避crypto.randomUUID打包崩溃
+// ==========================================
+function generateUUID() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = Math.random() * 16;
+        var v = c === 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+    });
+}
 
 // ==========================================
 // 1. 工具函数：生成 SVG 验证码
@@ -58,7 +68,6 @@ Deno.serve(async (req: Request) => {
     }
 
     const url = new URL(req.url)
-    // 绝对安全的路径截取
     const parts = url.pathname.split('/functions/v1/core-api/');
     const path = parts.length > 1 ? parts[1] : '';
     const method = req.method
@@ -72,7 +81,7 @@ Deno.serve(async (req: Request) => {
     try {
         // ===== 根路径 =====
         if (path === '' || path === '/') {
-            return new Response(JSON.stringify({ success: true, message: 'Hello from core-api' }), { headers: corsHeaders })
+            return new Response(JSON.stringify({ success: true, message: 'core-api is running' }), { headers: corsHeaders })
         }
 
         // ===== 认证模块 (Auth) =====
@@ -135,17 +144,10 @@ Deno.serve(async (req: Request) => {
             return new Response(JSON.stringify(demoData), { headers: corsHeaders });
         }
 
-        if ((path === 'projects' || path === '/projects') && method === 'GET') {
-            const { data, error } = await supabase.from('projects_cache').select('*').order('views', { ascending: false });
-            if (error) throw new Error(error.message);
-            return new Response(JSON.stringify(data), { headers: corsHeaders });
-        }
-
         // ===== 作品库 (Works) =====
         if ((path === 'works' || path === '/works') && method === 'GET') {
             const { data, error } = await supabase.from('works_cache').select('*').order('created_at', { ascending: false });
-            if (error) throw new Error(error.message);
-            // 关键点：如果 data 为空，直接返回空数组，防止前端报错
+            if (error) return new Response(JSON.stringify({ error: error.message }), { status: 500, headers: corsHeaders });
             return new Response(JSON.stringify(data || []), { headers: corsHeaders });
         }
 
@@ -166,7 +168,7 @@ Deno.serve(async (req: Request) => {
                 return new Response(JSON.stringify({ success: false, message: '标题和描述不能为空' }), { status: 400, headers: corsHeaders })
             }
             const newWork = {
-                id: crypto.randomUUID(),
+                id: generateUUID(),
                 title, category, description,
                 author: currentUser,
                 date: new Date().toLocaleString(),
@@ -174,7 +176,10 @@ Deno.serve(async (req: Request) => {
                 created_at: Date.now() / 1000
             }
             const { error } = await supabase.from('works_cache').insert(newWork)
-            if (error) throw new Error(error.message)
+            if (error) {
+                console.error("Database Insert Error:", error);
+                return new Response(JSON.stringify({ success: false, message: error.message }), { status: 500, headers: corsHeaders })
+            }
             return new Response(JSON.stringify({ success: true, message: '作品发布成功' }), { headers: corsHeaders })
         }
 
@@ -213,7 +218,7 @@ Deno.serve(async (req: Request) => {
             const content = formData.get('content')?.toString() || '';
             if (!title) return new Response(JSON.stringify({ success: false, message: '标题不能为空' }), { status: 400, headers: corsHeaders });
             const newPost = {
-                id: crypto.randomUUID(), type: p_type, title, content,
+                id: generateUUID(), type: p_type, title, content,
                 author: currentUser, date: new Date().toLocaleString(),
                 replies: 0, created_at: Date.now() / 1000
             };
@@ -245,7 +250,7 @@ Deno.serve(async (req: Request) => {
             const download_url = formData.get('download_url')?.toString() || '';
             if (!title || !download_url) return new Response(JSON.stringify({ success: false, message: '标题和下载地址不能为空' }), { status: 400, headers: corsHeaders });
             const newRes = {
-                id: crypto.randomUUID(), title, category, description, download_url,
+                id: generateUUID(), title, category, description, download_url,
                 author: currentUser, date: new Date().toLocaleString(), created_at: Date.now() / 1000
             };
             const { error } = await supabase.from('resources_cache').insert(newRes);
