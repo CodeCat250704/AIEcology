@@ -68,11 +68,10 @@
             </div>
         </form>
     </div>
-            <script>
-        // 1. 定义独一无二的 API 地址（防止和全局变量冲突）
+
+    <script>
         const API_TARGET_URL = 'https://tapavesjpfegmieqsxrt.supabase.co/functions/v1/core-api';
 
-        // 2. 封面图文件选择事件
         document.getElementById('cover_img').addEventListener('change', function(e) {
             const fileName = document.getElementById('coverFileName');
             if(this.files && this.files[0]) {
@@ -82,7 +81,6 @@
             }
         });
 
-        // 3. 文档文件选择事件
         document.getElementById('doc_txt').addEventListener('change', function(e) {
             const fileName = document.getElementById('docFileName');
             if(this.files && this.files[0]) {
@@ -92,29 +90,21 @@
             }
         });
 
-        // 4. 提交表单事件
         document.getElementById('createWorkForm').addEventListener('submit', async function(event) {
-            // 阻止表单默认提交导致页面刷新
             event.preventDefault();
-            
             const btn = this.querySelector('.btn-submit-work');
             const originalText = btn.innerText;
-            
             btn.innerText = "正在发布...";
             btn.disabled = true;
 
-            // 构建 FormData
             const formData = new FormData(this);
 
             try {
-                // 发送真实请求
                 const response = await fetch(`${API_TARGET_URL}/works/create`, {
                     method: 'POST',
                     body: formData
                 });
-                
                 const result = await response.json();
-                
                 if(result.success) {
                     alert('🎉 作品发布成功！');
                     window.location.href = '/work/index.html';
@@ -122,7 +112,6 @@
                     alert('发布失败: ' + result.message);
                 }
             } catch (err) {
-                // 如果出现网络错误，在这里显示
                 console.error("网络错误:", err);
                 alert('发布失败，请检查网络连接或控制台查看详情');
             } finally {
