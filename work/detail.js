@@ -1,6 +1,6 @@
 // 1. 自我兜底式获取云端 API 地址
 // 如果 home/script.js 的全局变量存在就使用它，不存在则使用默认的 (后续全局可用，确保不冲突)
-const API_BASE_URL = window.API_BASE_URL || 'https://tapavesjpfegmieqsxrt.supabase.co/functions/v1/core-api';
+//const API_BASE_URL = window.API_BASE_URL || 'https://tapavesjpfegmieqsxrt.supabase.co/functions/v1/core-api';
 
 document.addEventListener('DOMContentLoaded', async () => {
     // 如果页面内存在父级定义的 checkLoginStatus 方法，则调用它检测登录状态
